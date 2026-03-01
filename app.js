@@ -1,6 +1,3 @@
-// ==========================================
-// 1. إعدادات Firebase والمتغيرات الأساسية
-// ==========================================
 const firebaseConfig = { 
     apiKey: "AIzaSyBZMnIJ_IOqeAfXqFt-m4tM1Lvo0tUDnk8", 
     projectId: "ramadan-87817", 
@@ -12,39 +9,6 @@ let adminDay = 1, adminStatus = "closed";
 let logsUnsubscribe = null;
 window.myPowerups = { freeze: 0, fifty50: 0 }; 
 
-// ==========================================
-// 2. نظام تثبيت التطبيق (PWA)
-// ==========================================
-let deferredPrompt;
-window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    // إظهار نافذة التثبيت
-    let promptEl = document.getElementById('install-prompt');
-    if(promptEl) promptEl.classList.remove('hidden');
-});
-
-window.installApp = function() {
-    if (deferredPrompt) {
-        deferredPrompt.prompt();
-        deferredPrompt.userChoice.then((choiceResult) => {
-            if (choiceResult.outcome === 'accepted') {
-                console.log('User accepted the install prompt');
-            }
-            deferredPrompt = null;
-        });
-        document.getElementById('install-prompt').classList.add('hidden');
-    }
-};
-
-window.closeInstallPrompt = function() {
-    let promptEl = document.getElementById('install-prompt');
-    if(promptEl) promptEl.classList.add('hidden');
-};
-
-// ==========================================
-// 3. نظام الرسايل (Alerts)
-// ==========================================
 window.showAlert = function(title, msg, icon = "🔔", type = "normal") {
     let box = document.getElementById('custom-alert');
     document.getElementById('alert-title').innerText = title;
@@ -70,9 +34,6 @@ window.closeCustomAlert = function() {
     }, 200);
 }
 
-// ==========================================
-// 4. تهيئة الموقع وجلب البيانات
-// ==========================================
 window.addEventListener('DOMContentLoaded', () => {
     try {
         user = JSON.parse(localStorage.getItem('currentUser'));
@@ -116,9 +77,6 @@ function updateLogs() {
     });
 }
 
-// ==========================================
-// 5. التنقل بين الصفحات وعرض الخريطة والمتصدرين
-// ==========================================
 window.showTab = function(t) {
     let arena = document.getElementById('view-arena');
     let leader = document.getElementById('view-leaderboard');
@@ -170,9 +128,6 @@ function fetchLeaderboard() {
 
 window.logoutUser = function() { localStorage.removeItem('currentUser'); window.location.replace("index.html"); }
 
-// ==========================================
-// 6. عجلة الحظ (الستريك + احتمالات الجوايز)
-// ==========================================
 function setupWheelTimer() {
     let wheelData = JSON.parse(localStorage.getItem('wheelData_' + user.id)) || { streak: 0, lastLogin: null };
     let today = new Date();
@@ -244,7 +199,7 @@ window.spinWheel = function() {
     btn.classList.add('opacity-50', 'cursor-not-allowed');
     btn.innerText = "جاري اللف...";
     
-    // نظام الاحتمالات (نسبة الـ 20 نقطة نادرة جداً = 2%)
+    // الاحتمالات: 20 نقطة نادرة جداً
     let prizes = [
         { text: "50 نقطة", points: 50, item: null, angle: 330, chance: 5 }, 
         { text: "حذف إجابتين", points: 0, item: 'fifty50', angle: 270, chance: 25 }, 
@@ -260,10 +215,7 @@ window.spinWheel = function() {
     
     for (let i = 0; i < prizes.length; i++) {
         sum += prizes[i].chance;
-        if (rand <= sum) {
-            winIndex = i;
-            break;
-        }
+        if (rand <= sum) { winIndex = i; break; }
     }
     
     let prize = prizes[winIndex];
@@ -294,7 +246,6 @@ window.spinWheel = function() {
                 db.collection("users").doc(user.id).update({ powerups: window.myPowerups });
             }
         }
-        
         setTimeout(() => { location.reload(); }, 3500); 
     }, 4000); 
 }
