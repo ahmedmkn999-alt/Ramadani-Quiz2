@@ -3,93 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
-    <title>ملعب رمضان | التحدي الأكبر</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0a0f1d">
+    <link rel="apple-touch-icon" href="https://i.postimg.cc/9Fpp5TVC/IMG-20260217-031514.png">
     
+    <title>ملعب رمضان | التحدي الأكبر</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    
     <script defer src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script defer src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-    
-    <script src="https://pl28752538.effectivegatecpm.com/c3/3c/34/c33c34082705fc844e7a83f1bbebcf42.js"></script>
-    <script src="https://pl28773459.effectivegatecpm.com/0c/2e/75/0c2e7503a2abb6a631fb27fdf3b7ae02.js"></script>
-
-    <script defer src="app.js?v=602"></script>
-    <script defer src="quiz.js?v=602"></script>
+    <script defer src="app.js?v=603"></script>
+    <script defer src="quiz.js?v=603"></script>
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap');
         body { 
-            background-color: #0a0f1d; 
-            background-image: 
-                linear-gradient(to bottom, rgba(10, 15, 29, 0.85), rgba(3, 7, 18, 0.98)), 
-                url('https://images.unsplash.com/photo-1585036156171-384164a8c675?q=80&w=2070&auto=format&fit=crop'); 
-            background-size: cover; 
-            background-position: center; 
-            background-attachment: fixed;
-            color: white; 
-            font-family: 'Cairo', sans-serif; 
-            overflow-x: hidden; 
+            background: linear-gradient(-45deg, #0a0f1d, #1a233a, #030712, #0d1b2a);
+            background-size: 400% 400%; animation: gradientBG 15s ease infinite;
+            color: white; font-family: 'Cairo', sans-serif; overflow-x: hidden; 
         }
-        .glass-card { 
-            background: rgba(15, 23, 42, 0.7); 
-            border: 1px solid rgba(212, 175, 55, 0.3); 
-            backdrop-filter: blur(16px); 
-            box-shadow: 0 10px 30px 0 rgba(0, 0, 0, 0.7); 
-        }
-        .tab-btn { transition: 0.4s; cursor: pointer; border-bottom: 2px solid transparent; }
-        .tab-btn.active { background: linear-gradient(90deg, #b8860b, #ffd700); color: #000; font-weight: 900; transform: scale(1.02); }
-        .day-active { border: 2px solid #ffd700; background: linear-gradient(145deg, rgba(212,175,55,0.15), rgba(0,0,0,0.85)); animation: neonPulse 2s infinite; cursor: pointer; box-shadow: 0 0 15px rgba(255, 215, 0, 0.2); }
+        @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        .network-bg { position: fixed; inset: 0; z-index: -1; background-image: radial-gradient(circle at 20% 30%, rgba(212, 175, 55, 0.15) 0%, transparent 40%), radial-gradient(circle at 80% 70%, rgba(59, 130, 246, 0.15) 0%, transparent 40%); pointer-events: none; }
+        
+        .glass-card { background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(212, 175, 55, 0.3); backdrop-filter: blur(16px); box-shadow: 0 10px 30px 0 rgba(0, 0, 0, 0.7); }
+        .tab-btn.active { background: linear-gradient(90deg, #b8860b, #ffd700); color: #000; font-weight: 900; }
+        .day-active { border: 2px solid #ffd700; background: linear-gradient(145deg, rgba(212,175,55,0.15), rgba(0,0,0,0.85)); animation: neonPulse 2s infinite; cursor: pointer; }
         @keyframes neonPulse { 0% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.5); } 70% { box-shadow: 0 0 0 15px rgba(255, 215, 0, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0); } }
         
+        /* عجلة الحظ بعد التعديل الجذري - الكلمات بقت متظبطة */
         .legendary-wheel { 
-            background: conic-gradient(
-                #064e3b 0deg 60deg,
-                #78350f 60deg 120deg,
-                #1e3a8a 120deg 180deg,
-                #4c1d95 180deg 240deg,
-                #7f1d1d 240deg 300deg,
-                #0f172a 300deg 360deg
-            ); 
-            border-radius: 50%; 
-            border: 8px solid #fbbf24; 
-            box-shadow: 0 0 50px rgba(251, 191, 36, 0.6), inset 0 0 40px rgba(0,0,0,0.9); 
+            background: conic-gradient(#064e3b 0deg 60deg, #78350f 60deg 120deg, #1e3a8a 120deg 180deg, #4c1d95 180deg 240deg, #7f1d1d 240deg 300deg, #0f172a 300deg 360deg); 
+            border-radius: 50%; border: 8px solid #fbbf24; box-shadow: 0 0 50px rgba(251, 191, 36, 0.6), inset 0 0 40px rgba(0,0,0,0.9); position: relative;
         }
-        .wheel-segment { position: absolute; width: 50%; height: 50%; transform-origin: bottom right; display: flex; align-items: center; justify-content: center; font-weight: 900; color: #fde68a; text-shadow: 2px 2px 5px rgba(0,0,0,1); font-size: 15px; }
         
         #quiz-overlay { position: fixed; inset: 0; background: rgba(3, 7, 18, 0.98); z-index: 2147483647 !important; display: none; align-items: center; justify-content: center; padding: 10px; }
-        .quiz-box { width: 100%; max-width: 450px; max-height: 90vh; overflow-y: auto; background: linear-gradient(145deg, #0f172a, #030712); border: 1px solid rgba(212, 175, 55, 0.5); border-radius: 20px; padding: 20px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.9); scrollbar-width: none; }
-        .quiz-box::-webkit-scrollbar { display: none; }
-        
-        .powerup-badge { position: absolute; top: -8px; right: -8px; background: #ef4444; color: white; border-radius: 50%; width: 22px; height: 22px; display: flex; justify-content: center; align-items: center; font-size: 12px; font-weight: bold; border: 2px solid #111827; box-shadow: 0 2px 5px rgba(0,0,0,0.5); }
-
-        body.hide-ads #main-ui, body.hide-ads iframe, body.hide-ads ins { display: none !important; }
-        body.hide-ads { overflow: hidden !important; background: #030712 !important; }
+        .quiz-box { width: 100%; max-width: 450px; background: linear-gradient(145deg, #0f172a, #030712); border: 1px solid rgba(212, 175, 55, 0.5); border-radius: 20px; padding: 20px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.9); }
     </style>
 </head>
 <body class="relative">
+    <div class="network-bg"></div>
+
+    <div id="install-prompt" class="fixed bottom-4 left-0 w-full z-[999999] px-4 hidden">
+        <div class="glass-card p-4 rounded-2xl flex items-center justify-between border-2 border-yellow-500 shadow-[0_10px_40px_rgba(0,0,0,0.9)] bg-gray-900/95">
+            <div class="flex items-center gap-3">
+                <img src="https://i.postimg.cc/9Fpp5TVC/IMG-20260217-031514.png" class="w-12 h-12 rounded-xl border border-yellow-500">
+                <div>
+                    <h4 class="text-white font-black text-sm">تطبيق ملعب رمضان</h4>
+                    <p class="text-gray-400 text-xs font-bold">ثبت التطبيق للوصول السريع</p>
+                </div>
+            </div>
+            <div class="flex gap-2">
+                <button onclick="installApp()" class="bg-gradient-to-r from-yellow-500 to-yellow-600 text-black px-4 py-2 rounded-xl font-black text-sm shadow-md">تثبيت</button>
+                <button onclick="closeInstallPrompt()" class="bg-gray-800 text-gray-300 px-3 py-2 rounded-xl font-black"><i class="fas fa-times"></i></button>
+            </div>
+        </div>
+    </div>
 
     <div id="custom-alert" class="fixed inset-0 bg-black/80 z-[999999] hidden items-center justify-center p-4 backdrop-blur-sm">
         <div class="glass-card p-6 rounded-3xl w-full max-w-sm text-center transform scale-95 transition-transform" id="alert-box">
             <div id="alert-icon" class="text-5xl mb-4"></div>
-            <h3 id="alert-title" class="text-2xl font-black text-white mb-2"></h3>
-            <p id="alert-msg" class="text-gray-300 font-bold text-sm mb-6 leading-relaxed"></p>
-            <button onclick="closeCustomAlert()" class="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 text-black font-black py-3 rounded-xl shadow-lg hover:scale-105 transition-all">حسناً يا بطل</button>
+            <h3 id="alert-title" class="text-2xl font-black mb-2"></h3>
+            <p id="alert-msg" class="text-gray-300 font-bold text-sm mb-6"></p>
+            <button onclick="closeCustomAlert()" class="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 text-black font-black py-3 rounded-xl">حسناً يا بطل</button>
         </div>
     </div>
 
     <div class="fixed top-0 left-0 w-full z-[100] bg-gray-900/90 border-b border-gray-700 backdrop-blur-md px-4 py-2 flex justify-between items-center shadow-lg">
         <div class="flex items-center gap-3">
-            <div class="bg-blue-900/50 border border-blue-500/50 px-3 py-1 rounded-full flex items-center gap-2">
-                <i class="fas fa-snowflake text-blue-400"></i><span id="inv-freeze" class="text-white font-black text-sm">0</span>
-            </div>
-            <div class="bg-purple-900/50 border border-purple-500/50 px-3 py-1 rounded-full flex items-center gap-2">
-                <i class="fas fa-cut text-purple-400"></i><span id="inv-5050" class="text-white font-black text-sm">0</span>
-            </div>
+            <div class="bg-blue-900/50 border border-blue-500/50 px-3 py-1 rounded-full flex items-center gap-2"><i class="fas fa-snowflake text-blue-400"></i><span id="inv-freeze" class="text-white font-black text-sm">0</span></div>
+            <div class="bg-purple-900/50 border border-purple-500/50 px-3 py-1 rounded-full flex items-center gap-2"><i class="fas fa-cut text-purple-400"></i><span id="inv-5050" class="text-white font-black text-sm">0</span></div>
         </div>
         <button onclick="logoutUser()" class="text-red-400 text-xs font-bold hover:text-red-300"><i class="fas fa-power-off"></i> خروج</button>
     </div>
@@ -127,12 +110,7 @@
         </div>
 
         <div id="view-arena" class="max-w-lg mx-auto space-y-4 pb-10"></div>
-        <div id="view-leaderboard" class="max-w-lg mx-auto hidden pb-10">
-            <div class="glass-card p-6 rounded-3xl">
-                <h3 class="text-center text-white font-black mb-6 border-b border-gray-700 pb-3">ترتيب مجموعتك</h3>
-                <div id="group-list" class="space-y-3"></div>
-            </div>
-        </div>
+        <div id="view-leaderboard" class="max-w-lg mx-auto hidden pb-10"><div class="glass-card p-6 rounded-3xl"><h3 class="text-center text-white font-black mb-6 border-b border-gray-700 pb-3">ترتيب مجموعتك</h3><div id="group-list" class="space-y-3"></div></div></div>
     </div> 
 
     <div id="quiz-overlay"><div class="quiz-box" id="quiz-content"></div></div>
@@ -145,21 +123,23 @@
             
             <div class="relative w-64 h-64 mx-auto mb-8">
                 <div class="absolute -top-6 left-1/2 transform -translate-x-1/2 text-5xl text-white z-20 drop-shadow-[0_5px_10px_rgba(0,0,0,1)]"><i class="fas fa-caret-down"></i></div>
-                <div id="wheel-spinner" class="legendary-wheel w-full h-full relative transition-transform duration-[4000ms] ease-out">
-                    <div class="wheel-segment" style="top:0; right:0; transform: rotate(30deg) skewY(30deg);"><div style="transform: skewY(-30deg) rotate(-30deg) translateY(-50px);">+50💎</div></div>
-                    <div class="wheel-segment" style="top:50%; right:0; transform: rotate(90deg) skewY(30deg);"><div style="transform: skewY(-30deg) rotate(-30deg) translateY(-50px);">✂️ إجابتين</div></div>
-                    <div class="wheel-segment" style="top:50%; right:50%; transform: rotate(150deg) skewY(30deg);"><div style="transform: skewY(-30deg) rotate(-30deg) translateY(-50px);">+20🪙</div></div>
-                    <div class="wheel-segment" style="top:0; right:50%; transform: rotate(210deg) skewY(30deg);"><div style="transform: skewY(-30deg) rotate(-30deg) translateY(-50px);">❄️ تجميد</div></div>
-                    <div class="wheel-segment" style="top:-50%; right:50%; transform: rotate(270deg) skewY(30deg);"><div style="transform: skewY(-30deg) rotate(-30deg) translateY(-50px);">+10🪙</div></div>
-                    <div class="wheel-segment" style="top:-50%; right:0; transform: rotate(330deg) skewY(30deg);"><div style="transform: skewY(-30deg) rotate(-30deg) translateY(-50px);">❌ حظ أوفر</div></div>
+                <div id="wheel-spinner" class="legendary-wheel w-full h-full transition-transform duration-[4000ms] ease-out">
+                    <div class="absolute inset-0" style="transform: rotate(30deg);"><div class="absolute top-3 w-full text-center font-black text-yellow-200 text-sm drop-shadow-[0_2px_4px_rgba(0,0,0,1)]">حظ أوفر</div></div>
+                    <div class="absolute inset-0" style="transform: rotate(90deg);"><div class="absolute top-3 w-full text-center font-black text-yellow-200 text-sm drop-shadow-[0_2px_4px_rgba(0,0,0,1)]">10 نقاط</div></div>
+                    <div class="absolute inset-0" style="transform: rotate(150deg);"><div class="absolute top-3 w-full text-center font-black text-yellow-200 text-sm drop-shadow-[0_2px_4px_rgba(0,0,0,1)]">تجميد</div></div>
+                    <div class="absolute inset-0" style="transform: rotate(210deg);"><div class="absolute top-3 w-full text-center font-black text-yellow-200 text-sm drop-shadow-[0_2px_4px_rgba(0,0,0,1)] transform rotate-180">20 نقطة</div></div>
+                    <div class="absolute inset-0" style="transform: rotate(270deg);"><div class="absolute top-3 w-full text-center font-black text-yellow-200 text-sm drop-shadow-[0_2px_4px_rgba(0,0,0,1)] transform rotate-180">إجابتين</div></div>
+                    <div class="absolute inset-0" style="transform: rotate(330deg);"><div class="absolute top-3 w-full text-center font-black text-yellow-200 text-sm drop-shadow-[0_2px_4px_rgba(0,0,0,1)] transform rotate-180">50 نقطة</div></div>
                 </div>
                 <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-10 h-10 bg-gray-900 border-4 border-yellow-500 rounded-full z-10"></div>
             </div>
             
-            <div id="wheel-controls" class="w-full">
-            </div>
+            <div id="wheel-controls" class="w-full"></div>
         </div>
     </div>
+    
+    <script>
+        if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js'); }
+    </script>
 </body>
-  </html>
-                                                                                                                     
+</html>
