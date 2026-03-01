@@ -1,0 +1,20 @@
+{
+  "name": "ملعب رمضان",
+  "short_name": "ملعب رمضان",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#0a0f1d",
+  "theme_color": "#0a0f1d",
+  "icons": [
+    {
+      "src": "https://i.postimg.cc/9Fpp5TVC/IMG-20260217-031514.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://i.postimg.cc/9Fpp5TVC/IMG-20260217-031514.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
