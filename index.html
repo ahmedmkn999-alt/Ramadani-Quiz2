@@ -3,43 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0a0f1d">
+    <link rel="apple-touch-icon" href="https://i.postimg.cc/9Fpp5TVC/IMG-20260217-031514.png">
+    
     <title>كويز الرمضاني | تسجيل الدخول</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap');
         body { 
-            background-color: #0a0f1d; 
-            background-image: 
-                linear-gradient(to bottom, rgba(10, 15, 29, 0.85), rgba(3, 7, 18, 0.98)), 
-                url('https://images.unsplash.com/photo-1585036156171-384164a8c675?q=80&w=2070&auto=format&fit=crop'); 
-            background-size: cover; 
-            background-position: center; 
-            background-attachment: fixed;
+            background: linear-gradient(-45deg, #0a0f1d, #1a233a, #030712, #0d1b2a);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
             color: white; 
             font-family: 'Cairo', sans-serif; 
-            display: flex; 
-            flex-direction: column; 
-            min-height: 100vh; 
-            align-items: center; 
-            justify-content: center; 
+            display: flex; flex-direction: column; min-height: 100vh; align-items: center; justify-content: center; 
         }
-        .login-box { 
-            background: rgba(15, 23, 42, 0.65); 
-            border: 1px solid rgba(212, 175, 55, 0.4); 
-            backdrop-filter: blur(16px); 
-            box-shadow: 0 15px 50px rgba(0,0,0,0.8), 0 0 30px rgba(212, 175, 55, 0.15); 
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
+        .network-bg { position: fixed; inset: 0; z-index: -1; background-image: radial-gradient(circle at 20% 30%, rgba(212, 175, 55, 0.15) 0%, transparent 40%), radial-gradient(circle at 80% 70%, rgba(59, 130, 246, 0.15) 0%, transparent 40%); pointer-events: none; }
+        .login-box { background: rgba(15, 23, 42, 0.65); border: 1px solid rgba(212, 175, 55, 0.4); backdrop-filter: blur(16px); box-shadow: 0 15px 50px rgba(0,0,0,0.8), 0 0 30px rgba(212, 175, 55, 0.15); }
     </style>
 </head>
-<body class="p-4">
+<body class="p-4 relative">
+    <div class="network-bg"></div>
 
     <div class="login-box p-8 rounded-3xl w-full max-w-sm text-center">
         <img src="https://i.postimg.cc/9Fpp5TVC/IMG-20260217-031514.png" class="w-24 h-24 mx-auto rounded-full border-2 border-yellow-500 mb-6 shadow-[0_0_20px_rgba(212,175,55,0.6)] object-cover">
         <h1 class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-yellow-600 mb-2">أهلاً بك يا بطل</h1>
         <p class="text-gray-300 text-sm mb-8 font-bold">أدخل كود الدخول للبدء في التحدي الرمضاني</p>
 
-        <input type="password" id="login-pass" onkeypress="if(event.key === 'Enter') loginUser()" placeholder="كود الدخول..." class="w-full p-4 bg-gray-900/80 rounded-xl mb-6 text-yellow-400 border border-gray-600 outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/50 text-center tracking-widest font-black text-xl transition-all shadow-inner">
+        <input type="password" id="login-pass" onkeypress="if(event.key === 'Enter') loginUser()" placeholder="كود الدخول..." class="w-full p-4 bg-gray-900/80 rounded-xl mb-6 text-yellow-400 border border-gray-600 outline-none focus:border-yellow-500 text-center tracking-widest font-black text-xl shadow-inner">
         
         <button onclick="loginUser()" id="login-btn" class="w-full bg-gradient-to-r from-yellow-600 via-yellow-500 to-yellow-600 text-black font-black py-4 rounded-xl shadow-[0_5px_15px_rgba(212,175,55,0.4)] hover:scale-105 transition-transform text-lg">دخول الملعب ⚽</button>
         <p id="error-msg" class="text-red-500 text-sm mt-4 font-bold hidden bg-red-900/40 py-2 rounded-lg border border-red-500/50"></p>
@@ -49,6 +46,9 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     
     <script>
+        // تشغيل Service Worker
+        if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js'); }
+
         const firebaseConfig = { 
             apiKey: "AIzaSyBZMnIJ_IOqeAfXqFt-m4tM1Lvo0tUDnk8", 
             projectId: "ramadan-87817", 
@@ -68,20 +68,14 @@
             let p = document.getElementById('login-pass').value.trim();
             let err = document.getElementById('error-msg');
             let btn = document.getElementById('login-btn');
-
             if (!p) { err.innerText = "⚠️ برجاء كتابة كود الدخول!"; err.classList.remove('hidden'); return; }
-
-            btn.innerText = "جاري التحقق...";
-            err.classList.add('hidden');
+            btn.innerText = "جاري التحقق..."; err.classList.add('hidden');
             localStorage.setItem('savedUserPass', p);
-
-            db.collection("users").where("password", "==", p).get()
-            .then(snap => {
+            db.collection("users").where("password", "==", p).get().then(snap => {
                 if (snap.empty) {
                     err.innerText = "❌ كود الدخول غير صحيح!"; err.classList.remove('hidden'); btn.innerText = "دخول الملعب ⚽";
                 } else {
-                    let userData = snap.docs[0].data();
-                    userData.id = snap.docs[0].id;
+                    let userData = snap.docs[0].data(); userData.id = snap.docs[0].id;
                     if (userData.isBanned) {
                         err.innerText = "⛔ حسابك محظور من اللعب!"; err.classList.remove('hidden'); btn.innerText = "دخول الملعب ⚽";
                     } else {
