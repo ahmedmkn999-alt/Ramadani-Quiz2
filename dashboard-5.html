@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#06010F">
+    <link rel="apple-touch-icon" href="https://i.postimg.cc/QN7YYDZb/1772330473684.png">
+    <title>ملعب رمضان | التحدي الأكبر</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="Protection.js"></script>
+    <script defer src="app.js?v=608"></script>
+    <script defer src="quiz.js?v=608"></script>
+    <script defer src="https://pl28752538.effectivegatecpm.com/c3/3c/34/c33c34082705fc844e7a83f1bbebcf42.js"></script>
+    <script defer src="https://pl28773459.effectivegatecpm.com/0c/2e/75/0c2e7503a2abb6a631fb27fdf3b7ae02.js"></script>
+
+    <style>
+        :root {
+            --gold: #C9A84C; --gold-light: #F0C96B; --gold-dark: #8B6914;
+            --green: #10B981; --red: #EF4444;
+            --purple: #7C3AED; --purple-soft: rgba(124,58,237,0.15);
+            --bg-dark: #06010F; --bg-card: rgba(20,8,40,0.75);
+        }
+        * { box-sizing: border-box; }
+        body { background: var(--bg-dark); color: white; font-family:'Cairo',sans-serif; overflow-x:hidden; }
+
+        /* === خلفية === */
+        .ramadan-bg {
+            position:fixed;inset:-10%;z-index:-2;
+            background-image:
+                linear-gradient(to bottom, rgba(6,1,15,0.85), rgba(3,4,18,0.97)),
+                url('https://i.postimg.cc/TpjGQ5xs/image.jpg');
+            background-size:cover;background-position:center;
+            animation:smoothPan 25s infinite alternate ease-in-out;
+        }
+        @keyframes smoothPan {
+            0%{transform:scale(1.00)translate(0,0)} 50%{transform:scale(1.05)translate(-1%,1%)} 100%{transform:scale(1.10)translate(1%,-1%)}
+        }
+
+        /* نجوم SVG خلفية */
+        .stars-layer {
+            position:fixed;inset:0;z-index:-1;pointer-events:none;
+            background-image:
+                radial-gradient(1.5px 1.5px at 8% 10%, rgba(201,168,76,0.7) 0%,transparent 100%),
+                radial-gradient(1px 1px at 22% 18%, rgba(255,255,255,0.8) 0%,transparent 100%),
+                radial-gradient(1.5px 1.5px at 38% 6%, rgba(255,255,255,0.9) 0%,transparent 100%),
+                radial-gradient(1px 1px at 54% 22%, rgba(201,168,76,0.6) 0%,transparent 100%),
+                radial-gradient(1px 1px at 70% 12%, rgba(255,255,255,0.7) 0%,transparent 100%),
+                radial-gradient(1.5px 1.5px at 86% 8%, rgba(255,255,255,0.9) 0%,transparent 100%),
+                radial-gradient(1px 1px at 15% 35%, rgba(201,168,76,0.5) 0%,transparent 100%),
+                radial-gradient(1px 1px at 45% 30%, rgba(255,255,255,0.6) 0%,transparent 100%),
+                radial-gradient(1.5px 1.5px at 75% 40%, rgba(255,255,255,0.5) 0%,transparent 100%),
+                radial-gradient(1px 1px at 92% 28%, rgba(201,168,76,0.6) 0%,transparent 100%),
+                radial-gradient(circle at 15% 25%, rgba(201,168,76,0.08) 0%,transparent 40%),
+                radial-gradient(circle at 85% 75%, rgba(124,58,237,0.08) 0%,transparent 40%);
+        }
+
+        /* === فوانيس === */
+        .lantern-wrap{position:fixed;top:0;z-index:200;pointer-events:none;}
+        .lantern-wrap.r{right:10px;transform-origin:top center;animation:swingR 3.5s ease-in-out infinite;}
+        .lantern-wrap.l{left:10px;transform-origin:top center;animation:swingL 3.2s ease-in-out infinite;}
+        @keyframes swingR{0%{transform:rotate(-8deg)}50%{transform:rotate(8deg)}100%{transform:rotate(-8deg)}}
+        @keyframes swingL{0%{transform:rotate(8deg)}50%{transform:rotate(-8deg)}100%{transform:rotate(8deg)}}
+        .l-string{width:1px;height:40px;background:linear-gradient(to bottom,rgba(201,168,76,0.5),rgba(201,168,76,0.1));margin:0 auto;}
+        .l-body{width:22px;height:32px;margin:0 auto;
+            background:linear-gradient(180deg,rgba(240,201,107,0.95),rgba(201,168,76,0.65));
+            border-radius:4px 4px 8px 8px;position:relative;animation:lGlow 2.8s ease-in-out infinite;overflow:hidden;}
+        .l-body::before{content:'';position:absolute;inset:0;
+            background:repeating-linear-gradient(90deg,transparent 0,transparent 3px,rgba(0,0,0,0.12) 3px,rgba(0,0,0,0.12) 4px);}
+        .l-cap{width:20px;height:6px;margin:0 auto;background:linear-gradient(180deg,var(--gold),var(--gold-dark));border-radius:4px 4px 0 0;}
+        .l-tail{width:1px;height:8px;margin:0 auto;background:rgba(201,168,76,0.4);}
+        @keyframes lGlow{
+            0%,100%{box-shadow:0 0 10px 4px rgba(201,168,76,0.55),0 0 22px rgba(240,201,107,0.3)}
+            50%{box-shadow:0 0 18px 8px rgba(201,168,76,0.85),0 0 36px rgba(240,201,107,0.5)}
+        }
+
+        /* === شريط علوي === */
+        .top-bar {
+            background:linear-gradient(135deg,rgba(6,1,15,0.95),rgba(15,5,35,0.92));
+            border-bottom:1px solid rgba(201,168,76,0.15);
+            backdrop-filter:blur(20px);
+        }
+
+        /* powerup pills */
+        .pw-pill {
+            display:flex;align-items:center;gap:6px;
+            padding:6px 13px;border-radius:999px;
+        }
+        .pw-pill.freeze { background:rgba(30,58,138,0.35);border:1px solid rgba(59,130,246,0.3); }
+        .pw-pill.fifty { background:rgba(76,29,149,0.35);border:1px solid rgba(147,51,234,0.3); }
+        .pw-pill span { font-weight:900;font-size:13px; }
+        .pw-pill i { font-size:11px; }
+        .logout-btn {
+            display:flex;align-items:center;gap:5px;
+            color:#F87171;font-size:12px;font-weight:700;
+            background:rgba(127,29,29,0.22);border:1px solid rgba(239,68,68,0.28);
+            padding:6px 13px;border-radius:999px;cursor:pointer;transition:all 0.2s;
+        }
+        .logout-btn:hover { background:rgba(127,29,29,0.4); }
+
+        /* === بطاقة اللاعب === */
+        .player-card {
+            background:linear-gradient(135deg,rgba(20,8,42,0.82),rgba(12,5,28,0.88));
+            border:1px solid rgba(201,168,76,0.28);border-radius:22px;
+            backdrop-filter:blur(18px);
+            box-shadow:0 8px 32px rgba(0,0,0,0.6),0 0 0 1px rgba(201,168,76,0.05) inset;
+            position:relative;overflow:hidden;
+        }
+        .player-card::before {
+            content:'';position:absolute;top:0;left:10%;right:10%;height:1px;
+            background:linear-gradient(90deg,transparent,rgba(201,168,76,0.35),transparent);
+        }
+        .score-pill {
+            background:linear-gradient(135deg,rgba(201,168,76,0.12),rgba(201,168,76,0.03));
+            border:1px solid rgba(201,168,76,0.3);border-radius:16px;padding:10px 14px;text-align:center;min-width:68px;
+        }
+
+        /* === تبويبات === */
+        .tabs-wrap { display:flex;background:rgba(6,1,15,0.75);padding:5px;border-radius:18px;
+            border:1px solid rgba(255,255,255,0.05); }
+        .tab-btn { flex:1;padding:11px;border-radius:14px;font-family:'Cairo',sans-serif;
+            font-size:13px;font-weight:700;cursor:pointer;border:none;
+            color:rgba(255,255,255,0.5);background:none;transition:all .25s; }
+        .tab-btn.active {
+            background:linear-gradient(135deg,#8B6914,#D4AF37,#F0C96B);
+            color:#1A0530;font-weight:900;
+            box-shadow:0 3px 14px rgba(201,168,76,0.4); }
+        .tab-btn:not(.active):hover { color:rgba(255,255,255,0.85); }
+
+        /* === بطاقات الأيام === */
+        .day-done {
+            background:linear-gradient(135deg,rgba(6,78,59,0.28),rgba(5,46,22,0.45));
+            border:1px solid rgba(34,197,94,0.25);border-right:3px solid rgba(34,197,94,0.7);
+            border-radius:16px;padding:14px 16px;
+            display:flex;justify-content:space-between;align-items:center;
+            transition:transform .2s ease;
+        }
+        .day-done:hover { transform:translateX(-3px); }
+
+        .day-active {
+            background:linear-gradient(135deg,rgba(201,168,76,0.16),rgba(139,105,20,0.08));
+            border:1.5px solid rgba(201,168,76,0.7);border-radius:16px;padding:16px;
+            display:flex;justify-content:space-between;align-items:center;
+            cursor:pointer;animation:activePulse 2s infinite;transition:transform .2s ease;
+        }
+        .day-active:hover { transform:scale(1.01); }
+        @keyframes activePulse {
+            0%{box-shadow:0 0 0 0 rgba(201,168,76,0.6)}
+            70%{box-shadow:0 0 0 14px rgba(201,168,76,0)}
+            100%{box-shadow:0 0 0 0 rgba(201,168,76,0)}
+        }
+
+        .day-locked {
+            background:rgba(6,1,15,0.4);border:1px solid rgba(255,255,255,0.04);
+            border-radius:14px;padding:12px 16px;
+            display:flex;align-items:center;gap:12px;
+        }
+
+        /* === عجلة الحظ === */
+        .wheel-section {
+            display:flex;flex-direction:column;align-items:center;cursor:pointer;
+            padding-bottom:18px;position:relative;
+        }
+        .wheel-circle {
+            width:76px;height:76px;border-radius:50%;
+            background:linear-gradient(135deg,rgba(20,8,42,0.9),rgba(10,4,24,0.95));
+            border:2px solid rgba(201,168,76,0.5);
+            display:flex;align-items:center;justify-content:center;
+            box-shadow:0 0 0 0 rgba(201,168,76,0.4);
+            animation:wheelGlow 2.5s ease-in-out infinite;transition:transform 0.3s;
+        }
+        .wheel-circle:hover { transform:scale(1.08); }
+        .wheel-circle i { font-size:38px;color:var(--gold-light);transition:transform 0.6s; }
+        .wheel-circle:hover i { transform:rotate(180deg); }
+        @keyframes wheelGlow {
+            0%,100%{box-shadow:0 0 0 0 rgba(201,168,76,0.4),0 0 20px rgba(201,168,76,0.15)}
+            50%{box-shadow:0 0 0 10px rgba(201,168,76,0),0 0 30px rgba(201,168,76,0.25)}
+        }
+        .wheel-label {
+            position:absolute;bottom:0;left:50%;transform:translateX(-50%);
+            background:linear-gradient(90deg,#8B6914,#F0C96B);
+            padding:3px 14px;border-radius:999px;font-size:11px;font-weight:900;
+            color:#1A0530;white-space:nowrap;
+        }
+        .streak-badge {
+            position:absolute;top:-8px;right:-8px;
+            background:#EF4444;color:white;font-weight:900;font-size:11px;
+            padding:3px 7px;border-radius:999px;border:2px solid var(--bg-dark);
+        }
+
+        /* === زجاج كارد عام === */
+        .glass-card {
+            background:rgba(15,6,32,0.72);border:1px solid rgba(201,168,76,0.2);
+            backdrop-filter:blur(14px);box-shadow:0 8px 28px rgba(0,0,0,0.65);
+        }
+
+        /* === كويز أوفرلاي === */
+        #quiz-overlay {
+            position:fixed;inset:0;background:rgba(3,1,10,.98);z-index:2147483647!important;
+            display:none;align-items:center;justify-content:center;padding:10px;
+        }
+        .quiz-box {
+            width:100%;max-width:450px;
+            background:linear-gradient(145deg,rgba(15,6,32,0.98),rgba(6,1,15,0.99));
+            border:1px solid rgba(201,168,76,0.4);border-radius:22px;padding:22px;
+            box-shadow:0 25px 50px -12px rgba(0,0,0,.95),0 0 40px rgba(124,58,237,0.1);
+        }
+
+        .logo-fix { object-fit:cover;border-radius:50%;background-color:var(--bg-dark); }
+
+        body.hide-ads #main-ui,body.hide-ads iframe,body.hide-ads ins { display:none!important; }
+        body.hide-ads { overflow:hidden!important;background:var(--bg-dark)!important; }
+
+        /* === مكافحة الغش === */
+        #ac-modal { position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:99999999;
+            display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(10px); }
+        #ac-modal.show { display:flex; }
+        .ac-box {
+            background:linear-gradient(145deg,rgba(30,5,5,0.98),rgba(15,2,2,0.99));
+            border:1.5px solid rgba(239,68,68,0.5);border-radius:24px;
+            padding:32px 24px;max-width:360px;width:100%;text-align:center;
+            box-shadow:0 0 70px rgba(239,68,68,.25),0 25px 50px rgba(0,0,0,.85);
+            animation:acPop .4s cubic-bezier(.175,.885,.32,1.275);
+        }
+        @keyframes acPop { from{transform:scale(.7);opacity:0} to{transform:scale(1);opacity:1} }
+        .ac-icon { font-size:64px;margin-bottom:12px;display:block;animation:acShake .5s ease .3s; }
+        @keyframes acShake { 0%,100%{transform:translateX(0)} 20%,60%{transform:translateX(-8px)} 40%,80%{transform:translateX(8px)} }
+        .ac-btn { width:100%;padding:13px;border-radius:14px;border:none;cursor:pointer;
+            font-family:'Cairo',sans-serif;font-weight:900;font-size:15px;transition:transform .15s;margin-top:10px; }
+        .ac-btn:hover { transform:scale(1.03); }
+        .ac-btn.green { background:linear-gradient(135deg,#16a34a,#15803d);color:white;box-shadow:0 4px 14px rgba(22,163,74,.4); }
+        .ac-btn.red { background:linear-gradient(135deg,#991b1b,#7f1d1d);color:#fca5a5;border:1px solid rgba(239,68,68,.3); }
+
+        /* === تنبيه مخصص === */
+        #custom-alert { position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:999999;
+            align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(8px); }
+        .alert-box-inner {
+            background:linear-gradient(145deg,rgba(20,8,42,0.97),rgba(10,4,24,0.98));
+            border:1px solid rgba(201,168,76,0.3);border-radius:24px;padding:28px 22px;
+            width:100%;max-width:340px;text-align:center;
+        }
+
+        /* === عجلة الحظ أوفرلاي === */
+        #spin-overlay { position:fixed;inset:0;background:rgba(6,1,15,0.97);z-index:99999;
+            flex-direction:column;align-items:center;justify-content:center;padding:16px;
+            backdrop-filter:blur(16px); }
+        .spin-card {
+            background:linear-gradient(145deg,rgba(20,8,42,0.97),rgba(10,4,24,0.99));
+            border:1.5px solid rgba(201,168,76,0.45);border-radius:28px;padding:28px 24px;
+            width:100%;max-width:340px;text-align:center;position:relative;overflow:hidden;
+            box-shadow:0 0 60px rgba(201,168,76,0.15),0 30px 60px rgba(0,0,0,0.9);
+        }
+        .spin-card::before { content:'';position:absolute;top:0;left:20%;right:20%;height:2px;
+            background:linear-gradient(90deg,transparent,var(--gold-light),transparent); }
+        .legendary-wheel {
+            background:conic-gradient(
+                rgba(6,78,59,0.9) 0 60deg,
+                rgba(120,53,15,0.9) 60deg 120deg,
+                rgba(30,58,138,0.9) 120deg 180deg,
+                rgba(76,29,149,0.9) 180deg 240deg,
+                rgba(127,29,29,0.9) 240deg 300deg,
+                rgba(15,10,35,0.9) 300deg 360deg
+            );
+            border-radius:50%;
+            border:6px solid var(--gold);
+            box-shadow:0 0 50px rgba(201,168,76,0.5),inset 0 0 40px rgba(0,0,0,.9);
+            position:relative;
+        }
+
+        /* === سؤال الليلة === */
+        .night-star { position:absolute;width:2px;height:2px;background:white;border-radius:50%;
+            animation:starTwinkle 2.5s ease-in-out infinite; }
+        @keyframes starTwinkle { 0%,100%{opacity:.2;transform:scale(1)} 50%{opacity:1;transform:scale(1.6)} }
+        @keyframes moonPulse { 0%,100%{box-shadow:0 0 24px rgba(139,92,246,0.35)} 50%{box-shadow:0 0 38px rgba(139,92,246,0.60)} }
+
+        /* ليدربورد */
+        .lb-item {
+            display:flex;align-items:center;gap:12px;
+            background:rgba(6,1,15,0.5);border:1px solid rgba(255,255,255,0.06);
+            border-radius:14px;padding:12px 14px;transition:all 0.2s;
+        }
+        .lb-item:hover { border-color:rgba(201,168,76,0.2);background:rgba(20,8,42,0.6); }
+        .lb-rank { width:32px;height:32px;border-radius:50%;display:flex;align-items:center;
+            justify-content:center;font-weight:900;font-size:13px;flex-shrink:0; }
+        .lb-rank.gold { background:linear-gradient(135deg,#B8860B,#F0C96B);color:#1A0530; }
+        .lb-rank.silver { background:linear-gradient(135deg,#6B7280,#9CA3AF);color:#1A0530; }
+        .lb-rank.bronze { background:linear-gradient(135deg,#92400E,#D97706);color:white; }
+        .lb-rank.other { background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.5); }
+
+        /* section header */
+        .section-header {
+            display:flex;align-items:center;gap:10px;margin-bottom:14px;
+        }
+        .section-header-line { flex:1;height:1px;background:linear-gradient(to left,transparent,rgba(201,168,76,0.3)); }
+        .section-header span { font-size:11px;color:rgba(201,168,76,0.6);font-weight:700;letter-spacing:2px; }
+    </style>
+</head>
+<body class="relative">
+    <div class="ramadan-bg"></div>
+    <div class="stars-layer"></div>
+
+    <!-- فوانيس -->
+    <div class="lantern-wrap r"><div class="l-string"></div><div class="l-cap"></div><div class="l-body"></div><div class="l-tail"></div></div>
+    <div class="lantern-wrap l"><div class="l-string"></div><div class="l-cap"></div><div class="l-body"></div><div class="l-tail"></div></div>
+
+    <!-- مكافحة الغش -->
+    <div id="ac-modal">
+        <div class="ac-box">
+            <span class="ac-icon">🚨</span>
+            <h2 style="color:#ef4444;font-size:22px;font-weight:900;margin-bottom:8px;">تحذير!</h2>
+            <p id="ac-msg" style="color:#fca5a5;font-size:14px;font-weight:700;line-height:1.75;margin-bottom:4px;">حاولت الخروج من الكويز!</p>
+            <p style="color:#f87171;font-size:12px;font-weight:700;margin-bottom:18px;">النقاط محتسبة حتى هذه اللحظة.</p>
+            <button class="ac-btn green" onclick="acContinue()">✅ أكمل الكويز</button>
+            <button class="ac-btn red" onclick="acExit()">خروج (النقاط ستُحسب) 🚪</button>
+        </div>
+    </div>
+
+    <!-- تنبيه مخصص -->
+    <div id="custom-alert" style="display:none;" class="fixed inset-0 bg-black/80 z-50000 items-center justify-center p-4 backdrop-blur-sm">
+        <div class="alert-box-inner" id="alert-box" style="transition:transform 0.2s;transform:scale(0.95);">
+            <div id="alert-icon" style="font-size:50px;margin-bottom:12px;"></div>
+            <h3 id="alert-title" style="font-size:22px;font-weight:900;margin-bottom:8px;color:var(--gold-light);"></h3>
+            <p id="alert-msg" style="color:rgba(255,255,255,0.55);font-weight:700;font-size:13px;margin-bottom:20px;line-height:1.7;"></p>
+            <button onclick="closeCustomAlert()" style="width:100%;padding:13px;border:none;border-radius:13px;cursor:pointer;font-family:'Cairo',sans-serif;font-weight:900;font-size:15px;background:linear-gradient(135deg,#8B6914,#F0C96B);color:#1A0530;">حسناً يا بطل 👊</button>
+        </div>
+    </div>
+
+    <!-- شريط علوي -->
+    <div class="top-bar fixed top-0 left-0 w-full z-100 px-4 py-2.5 flex justify-between items-center shadow-lg" style="z-index:100;">
+        <div style="display:flex;align-items:center;gap:8px;">
+            <div class="pw-pill freeze">
+                <i class="fas fa-snowflake text-blue-400"></i>
+                <span id="inv-freeze">0</span>
+            </div>
+            <div class="pw-pill fifty">
+                <i class="fas fa-cut text-purple-400"></i>
+                <span id="inv-5050">0</span>
+            </div>
+        </div>
+        <button onclick="logoutUser()" class="logout-btn">
+            <i class="fas fa-power-off" style="font-size:11px;"></i> خروج
+        </button>
+    </div>
+
+    <!-- المحتوى -->
+    <div id="main-ui" class="p-4 pt-20 pb-28">
+
+        <!-- بطاقة اللاعب -->
+        <header class="player-card mb-5 max-w-lg mx-auto p-4">
+            <div style="position:absolute;top:-20px;right:-20px;width:100px;height:100px;background:radial-gradient(circle,rgba(201,168,76,0.08),transparent 70%);pointer-events:none;border-radius:50%;"></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;">
+                <div style="display:flex;align-items:center;gap:12px;flex:1;overflow:hidden;">
+                    <div style="position:relative;flex-shrink:0;">
+                        <img src="https://i.postimg.cc/QN7YYDZb/1772330473684.png" class="logo-fix w-14 h-14 border-2 border-yellow-500" style="box-shadow:0 0 18px rgba(201,168,76,0.4);">
+                        <div style="position:absolute;bottom:-2px;right:-2px;width:14px;height:14px;background:#22c55e;border-radius:50%;border:2px solid var(--bg-dark);"></div>
+                    </div>
+                    <div style="overflow:hidden;flex:1;">
+                        <h2 id="p-name" style="font-weight:900;color:white;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">...</h2>
+                        <span id="p-group" style="display:inline-block;margin-top:3px;color:var(--gold-light);font-weight:700;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.25);padding:1px 10px;border-radius:8px;font-size:11px;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">...</span>
+                    </div>
+                </div>
+                <div class="score-pill" style="flex-shrink:0;">
+                    <p style="font-size:9px;color:rgba(255,255,255,0.35);font-weight:700;letter-spacing:.5px;margin-bottom:2px;">نقاطك</p>
+                    <p id="p-score" style="font-weight:900;font-size:28px;color:var(--gold-light);line-height:1;">0</p>
+                    <p style="font-size:9px;color:rgba(201,168,76,0.35);font-weight:700;">pt</p>
+                </div>
+            </div>
+        </header>
+
+        <!-- عجلة الهدايا -->
+        <div class="max-w-lg mx-auto mb-7 flex justify-center">
+            <div onclick="openSpinWheel()" class="wheel-section group">
+                <div class="wheel-circle">
+                    <i class="fas fa-dharmachakra"></i>
+                </div>
+                <div id="streak-badge" class="streak-badge">0/3</div>
+                <div class="wheel-label">عجلة الهدايا 🎁</div>
+            </div>
+        </div>
+
+        <!-- تبويبات -->
+        <div class="tabs-wrap max-w-lg mx-auto mb-5">
+            <button onclick="showTab('arena')" id="btn-arena" class="tab-btn active">🗺️ الخريطة</button>
+            <button onclick="showTab('leaderboard')" id="btn-leader" class="tab-btn">🏆 المجموعة</button>
+        </div>
+
+        <!-- خريطة الأيام -->
+        <div id="view-arena" class="max-w-lg mx-auto pb-10"></div>
+
+        <!-- المتصدرون -->
+        <div id="view-leaderboard" class="max-w-lg mx-auto hidden pb-10">
+            <div class="glass-card p-6 rounded-3xl">
+                <div class="section-header">
+                    <span>ترتيب المجموعة 🏆</span>
+                    <div class="section-header-line"></div>
+                </div>
+                <div id="group-list" class="space-y-3"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- كويز أوفرلاي -->
+    <div id="quiz-overlay" style="display:none;"><div class="quiz-box" id="quiz-content"></div></div>
+
+    <!-- سؤال الليلة -->
+    <div id="nq-overlay" style="position:fixed;inset:0;background:radial-gradient(ellipse at 50% 30%,rgba(30,10,80,0.97) 0%,rgba(6,1,15,0.99) 100%);z-index:2147483640;display:none;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(4px);">
+        <div style="position:absolute;inset:0;pointer-events:none;overflow:hidden;">
+            <div class="night-star" style="top:5%;left:10%;width:3px;height:3px;animation-delay:0s;"></div>
+            <div class="night-star" style="top:12%;left:80%;width:2px;height:2px;animation-delay:.6s;"></div>
+            <div class="night-star" style="top:8%;left:45%;width:2px;height:2px;animation-delay:1.2s;"></div>
+            <div class="night-star" style="top:20%;left:25%;width:3px;height:3px;animation-delay:.3s;"></div>
+            <div class="night-star" style="top:18%;left:65%;width:2px;height:2px;animation-delay:1.8s;"></div>
+        </div>
+        <div style="width:100%;max-width:440px;background:linear-gradient(160deg,rgba(15,8,45,0.98),rgba(8,5,28,0.99));border:1px solid rgba(167,139,250,0.38);border-radius:26px;padding:24px 20px;box-shadow:0 0 80px rgba(100,50,220,0.2),0 30px 60px rgba(0,0,0,0.9);position:relative;overflow:hidden;" id="nq-box">
+            <div style="position:absolute;top:-40px;right:-40px;width:140px;height:140px;background:rgba(124,58,237,0.13);border-radius:50%;filter:blur(40px);"></div>
+            <div style="position:absolute;bottom:-30px;left:-30px;width:110px;height:110px;background:rgba(76,29,149,0.18);border-radius:50%;filter:blur(35px);"></div>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;position:relative;">
+                <div style="display:flex;align-items:center;gap:10px;">
+                    <span style="font-size:28px;filter:drop-shadow(0 0 12px rgba(200,160,255,0.9));animation:moonPulse 3s ease-in-out infinite;">🌙</span>
+                    <div>
+                        <div style="font-size:10px;color:rgba(167,139,250,0.7);font-weight:700;letter-spacing:1.5px;">سؤال الليلة</div>
+                        <div style="font-size:16px;font-weight:900;color:white;">التحدي الليلي 🌟</div>
+                    </div>
+                </div>
+                <div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
+                    <div style="font-size:9px;color:rgba(167,139,250,0.55);font-weight:700;">نقاط الجائزة</div>
+                    <div id="nq-prize-pts" style="font-size:24px;font-weight:900;color:#c4b5fd;line-height:1;">×2</div>
+                </div>
+            </div>
+            <div style="height:1px;background:linear-gradient(to right,transparent,rgba(167,139,250,0.28),transparent);margin-bottom:20px;"></div>
+            <div id="nq-content" style="position:relative;">
+                <div style="text-align:center;padding:30px;">
+                    <div style="font-size:30px;margin-bottom:10px;animation:moonPulse 2s ease-in-out infinite;">🌙</div>
+                    <p style="color:rgba(167,139,250,0.65);font-weight:700;">جاري تجهيز سؤال الليلة...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- عجلة الحظ -->
+    <div id="spin-overlay" class="fixed inset-0" style="display:none;z-index:99999;">
+        <div style="position:absolute;inset:0;background:rgba(6,1,15,0.97);backdrop-filter:blur(16px);"></div>
+        <div style="position:relative;z-index:1;height:100%;display:flex;align-items:center;justify-content:center;padding:16px;">
+            <div class="spin-card">
+                <button onclick="closeSpinWheel()" style="position:absolute;top:12px;left:16px;color:rgba(255,255,255,0.35);font-size:22px;font-weight:900;background:none;border:none;cursor:pointer;transition:color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,0.35)'">&times;</button>
+                <h2 style="font-size:24px;font-weight:900;color:var(--gold-light);margin-bottom:6px;">عجلة الحظ 🎁</h2>
+                <p style="color:rgba(255,255,255,0.4);font-size:13px;margin-bottom:22px;font-weight:700;">مكافأة أسطورية لالتزامك 3 أيام متتالية!</p>
+                <div style="position:relative;width:240px;height:240px;margin:0 auto 22px;">
+                    <div style="position:absolute;top:-22px;left:50%;transform:translateX(-50%);font-size:40px;color:var(--gold);z-index:20;">▼</div>
+                    <div id="wheel-spinner" class="legendary-wheel w-full h-full" style="transition:transform 4000ms cubic-bezier(0.17,0.67,0.12,0.99);">
+                        <div style="position:absolute;inset:0;transform:rotate(30deg);"><div style="position:absolute;top:10px;width:100%;text-align:center;font-weight:900;color:rgba(255,255,255,0.85);font-size:12px;">حظ أوفر</div></div>
+                        <div style="position:absolute;inset:0;transform:rotate(90deg);"><div style="position:absolute;top:10px;width:100%;text-align:center;font-weight:900;color:rgba(255,255,255,0.85);font-size:12px;">10 نقاط</div></div>
+                        <div style="position:absolute;inset:0;transform:rotate(150deg);"><div style="position:absolute;top:10px;width:100%;text-align:center;font-weight:900;color:rgba(255,255,255,0.85);font-size:12px;">تجميد</div></div>
+                        <div style="position:absolute;inset:0;transform:rotate(210deg);"><div style="position:absolute;top:10px;width:100%;text-align:center;font-weight:900;color:rgba(255,255,255,0.85);font-size:12px;transform:rotate(180deg);">20 نقطة</div></div>
+                        <div style="position:absolute;inset:0;transform:rotate(270deg);"><div style="position:absolute;top:10px;width:100%;text-align:center;font-weight:900;color:rgba(255,255,255,0.85);font-size:12px;transform:rotate(180deg);">إجابتين</div></div>
+                        <div style="position:absolute;inset:0;transform:rotate(330deg);"><div style="position:absolute;top:10px;width:100%;text-align:center;font-weight:900;color:rgba(255,255,255,0.85);font-size:12px;transform:rotate(180deg);">50 نقطة</div></div>
+                    </div>
+                    <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:36px;height:36px;background:rgba(6,1,15,0.95);border:3px solid var(--gold);border-radius:50%;z-index:10;box-shadow:0 0 15px rgba(201,168,76,0.4);"></div>
+                </div>
+                <div id="wheel-controls" class="w-full"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js');}
+
+        window.__renderMapEnhanced = function(container, myLogs, adminDay, adminStatus) {
+            if(!container) return;
+            let played = Object.keys(myLogs).length;
+            let total  = Object.values(myLogs).reduce((a,b)=>a+(b||0),0);
+            let html = '';
+
+            // عنوان
+            html += `<div style="text-align:center;margin-bottom:16px;">
+                <div style="display:flex;align-items:center;gap:10px;justify-content:center;">
+                    <div style="height:1px;flex:1;background:linear-gradient(to right,transparent,rgba(201,168,76,0.4));"></div>
+                    <span style="font-size:11px;color:rgba(201,168,76,0.65);font-weight:700;letter-spacing:2px;">رحلة رمضان ✨</span>
+                    <div style="height:1px;flex:1;background:linear-gradient(to left,transparent,rgba(201,168,76,0.4));"></div>
+                </div>
+            </div>`;
+
+            // إحصائيات
+            html += `<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;">
+                <div style="background:linear-gradient(135deg,rgba(34,197,94,0.12),rgba(22,163,74,0.04));border:1px solid rgba(34,197,94,0.22);border-radius:16px;padding:14px;text-align:center;">
+                    <div style="font-size:30px;font-weight:900;color:#4ade80;">${played}</div>
+                    <div style="font-size:10px;color:rgba(255,255,255,0.35);font-weight:700;">جولة مكتملة</div>
+                </div>
+                <div style="background:linear-gradient(135deg,rgba(201,168,76,0.12),rgba(180,145,35,0.04));border:1px solid rgba(201,168,76,0.22);border-radius:16px;padding:14px;text-align:center;">
+                    <div style="font-size:30px;font-weight:900;color:#F0C96B;">${total}</div>
+                    <div style="font-size:10px;color:rgba(255,255,255,0.35);font-weight:700;">نقطة محصودة</div>
+                </div>
+            </div>`;
+
+            html += `<div style="display:flex;flex-direction:column;gap:9px;">`;
+
+            for(let i=1; i<=30; i++){
+                let isPlayed = myLogs[i] !== undefined;
+                let isActive = (i===adminDay && adminStatus==='active');
+
+                if(isPlayed){
+                    let s=myLogs[i];
+                    let stars=s>=5?'⭐⭐⭐':s>=3?'⭐⭐':'⭐';
+                    html += `<div class="day-done">
+                        <div style="display:flex;align-items:center;gap:12px;">
+                            <div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,rgba(34,197,94,0.2),rgba(22,163,74,0.06));border:1.5px solid rgba(34,197,94,0.4);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                                <i class="fas fa-check" style="color:#4ade80;font-size:15px;"></i>
+                            </div>
+                            <div>
+                                <div style="font-weight:900;color:rgba(255,255,255,.88);font-size:14px;">الجولة ${i}</div>
+                                <div style="font-size:11px;color:rgba(34,197,94,0.6);font-weight:700;margin-top:1px;">${stars}</div>
+                            </div>
+                        </div>
+                        <div style="text-align:center;">
+                            <div style="font-weight:900;font-size:26px;color:#4ade80;line-height:1;">${s}</div>
+                            <div style="font-size:9px;color:rgba(74,222,128,0.4);font-weight:700;">نقطة</div>
+                        </div>
+                    </div>`;
+                } else if(isActive){
+                    html += `<div onclick="window.openQuiz(${i})" class="day-active">
+                        <div style="display:flex;align-items:center;gap:12px;">
+                            <div style="width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,#F0C96B,#C9A84C,#8B6914);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 18px rgba(201,168,76,0.5);flex-shrink:0;">
+                                <i class="fas fa-play" style="color:#1A0530;font-size:17px;margin-right:2px;"></i>
+                            </div>
+                            <div>
+                                <div style="font-weight:900;color:white;font-size:18px;">الجولة ${i}</div>
+                                <div style="font-size:11px;color:var(--gold-light);font-weight:700;margin-top:2px;">العب الآن! 🔥</div>
+                            </div>
+                        </div>
+                        <div style="background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.3);border-radius:12px;padding:8px 14px;text-align:center;">
+                            <div style="font-size:10px;color:rgba(201,168,76,0.55);font-weight:700;">نقاط</div>
+                            <div style="font-size:22px;font-weight:900;color:var(--gold-light);">?</div>
+                        </div>
+                    </div>`;
+                } else {
+                    html += `<div class="day-locked" style="opacity:${i<adminDay?.28:.4};">
+                        <div style="width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.07);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                            <i class="fas fa-lock" style="color:rgba(255,255,255,0.18);font-size:12px;"></i>
+                        </div>
+                        <div style="font-weight:700;font-size:13px;color:rgba(255,255,255,0.22);">الجولة ${i}</div>
+                    </div>`;
+                }
+            }
+            html += `</div>`;
+            container.innerHTML = html;
+        };
+
+        /* مكافحة الغش */
+        let _acShown=false;
+        window.showAcWarning=function(msg){
+            if(_acShown)return;_acShown=true;
+            let el=document.getElementById('ac-modal');
+            let msgEl=document.getElementById('ac-msg');
+            if(msgEl)msgEl.textContent=msg||'حاولت الخروج أثناء الكويز!';
+            if(el)el.classList.add('show');
+        };
+        window.acContinue=function(){
+            _acShown=false;document.getElementById('ac-modal').classList.remove('show');
+            window.isQuizActive=true;if(window._acResume)window._acResume();
+        };
+        window.acExit=function(){
+            _acShown=false;document.getElementById('ac-modal').classList.remove('show');
+            window.isQuizActive=false;if(window._acForceEnd)window._acForceEnd();
+        };
+        document.addEventListener('keyup',function(e){
+            if(e.keyCode===44){navigator.clipboard&&navigator.clipboard.writeText('').catch(()=>{});
+            if(window.isQuizActive)window.showAcWarning('📸 محاولة التقاط لقطة شاشة - هذا محظور!');}
+        });
+
+        /* Custom alert animations */
+        window.closeCustomAlert=window.closeCustomAlert||function(){
+            let box=document.getElementById('custom-alert');
+            document.getElementById('alert-box').style.transform='scale(0.95)';
+            setTimeout(()=>{box.style.display='none';},200);
+        };
+    </script>
+</body>
+</html>
