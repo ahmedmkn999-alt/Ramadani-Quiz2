@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#000008">
+<link rel="apple-touch-icon" href="https://i.postimg.cc/QN7YYDZb/1772330473684.png">
+<title>ملعب رمضان | التحدي الأكبر</title>
+<link href="https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Amiri:wght@400;700&family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<!-- Firebase أولاً -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<script src="Protection.js"></script>
+<script defer src="app.js?v=900"></script>
+<script defer src="quiz.js?v=900"></script>
+<script defer src="https://pl28752538.effectivegatecpm.com/c3/3c/34/c33c34082705fc844e7a83f1bbebcf42.js"></script>
+<script defer src="https://pl28773459.effectivegatecpm.com/0c/2e/75/0c2e7503a2abb6a631fb27fdf3b7ae02.js"></script>
+
+<style>
+:root{
+  --g1:#C9A84C;--g2:#F0C96B;--g3:#7A4F10;
+  --e1:#FF4500;--e2:#FF6B00;
+  --bg:#000008;
+}
+*{box-sizing:border-box;margin:0;padding:0;cursor:none!important;}
+
+/* ── CURSOR ── */
+#CR{position:fixed;width:22px;height:22px;pointer-events:none;z-index:99999;transform:translate(-50%,-50%);}
+#CRR{position:fixed;width:44px;height:44px;pointer-events:none;z-index:99998;transform:translate(-50%,-50%);border:1.5px solid rgba(201,168,76,.5);border-radius:50%;transition:all .12s ease;}
+
+body{font-family:'Amiri','Cairo',serif;background:var(--bg);color:#fff;overflow-x:hidden;}
+
+/* ── BG ── */
+.rambg{position:fixed;inset:-10%;z-index:-2;background-image:linear-gradient(to bottom,rgba(0,0,8,.88),rgba(0,0,4,.97)),url('https://i.postimg.cc/TpjGQ5xs/image.jpg');background-size:cover;background-position:center;animation:bgPan 25s infinite alternate ease-in-out;}
+@keyframes bgPan{0%{transform:scale(1) translate(0,0)}50%{transform:scale(1.06) translate(-1%,1%)}100%{transform:scale(1.12) translate(1%,-1%)}}
+#SC{position:fixed;inset:0;z-index:-1;pointer-events:none;}
+
+/* ── FIRE ── */
+.fp{position:fixed;border-radius:50%;pointer-events:none;z-index:1;bottom:0;left:var(--l,50%);width:var(--s,5px);height:var(--s,5px);background:radial-gradient(circle,#fff 0%,var(--e2) 40%,var(--e1) 80%,transparent 100%);animation:fpU var(--d,3s) ease-out var(--dl,0s) infinite;}
+@keyframes fpU{0%{transform:translateY(0) scale(1);opacity:.9;}50%{transform:translateY(-50vh) translateX(var(--x,20px)) scale(.5);opacity:.5;}100%{transform:translateY(-90vh) translateX(var(--x2,40px)) scale(.07);opacity:0;}}
+
+/* ── LANTERNS ── */
+.lan{position:fixed;top:0;z-index:200;pointer-events:none;}
+.lan.L{left:8px;transform-origin:top center;animation:swL 3.2s ease-in-out infinite;}
+.lan.R{right:8px;transform-origin:top center;animation:swR 3.6s ease-in-out infinite;}
+@keyframes swL{0%,100%{transform:rotate(9deg)}50%{transform:rotate(-9deg)}}
+@keyframes swR{0%,100%{transform:rotate(-9deg)}50%{transform:rotate(9deg)}}
+.lw{width:1px;height:44px;background:linear-gradient(to bottom,rgba(201,168,76,.65),transparent);margin:0 auto;}
+.lc{width:22px;height:7px;background:linear-gradient(180deg,var(--g2),var(--g3));border-radius:3px 3px 0 0;margin:0 auto;}
+.lb{width:22px;height:32px;margin:0 auto;background:linear-gradient(180deg,rgba(255,220,100,.95),rgba(201,168,76,.7));border-radius:4px 4px 10px 10px;overflow:hidden;animation:lGl 2.5s ease-in-out infinite;}
+.lb::before{content:'';display:block;height:100%;background:repeating-linear-gradient(90deg,transparent 0,transparent 3px,rgba(0,0,0,.1) 3px,rgba(0,0,0,.1) 4px);}
+.lt{width:1px;height:9px;background:rgba(201,168,76,.4);margin:0 auto;}
+@keyframes lGl{0%,100%{box-shadow:0 0 14px 5px rgba(255,180,0,.7),0 0 28px rgba(255,140,0,.4);}50%{box-shadow:0 0 22px 9px rgba(255,200,0,.95),0 0 50px rgba(255,100,0,.6);}}
+
+/* ── TOP BAR ── */
+.top-bar{background:linear-gradient(135deg,rgba(0,0,8,.96),rgba(10,4,0,.94));border-bottom:1px solid rgba(201,168,76,.15);backdrop-filter:blur(24px);position:fixed;top:0;left:0;width:100%;z-index:100;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;}
+.pw{display:flex;align-items:center;gap:6px;padding:6px 13px;border-radius:999px;transition:all .2s;}
+.pw.frz{background:rgba(30,58,138,.35);border:1px solid rgba(59,130,246,.3);}
+.pw.fft{background:rgba(76,29,149,.35);border:1px solid rgba(147,51,234,.3);}
+.pw span{font-family:'Cairo',sans-serif;font-weight:900;font-size:13px;}
+.logout-btn{display:flex;align-items:center;gap:5px;color:#F87171;font-family:'Cairo',sans-serif;font-size:12px;font-weight:700;background:rgba(127,29,29,.22);border:1px solid rgba(239,68,68,.28);padding:6px 13px;border-radius:999px;transition:all .2s;}
+.logout-btn:hover{background:rgba(127,29,29,.45);}
+
+/* ── PLAYER CARD ── */
+.player-card{background:linear-gradient(135deg,rgba(16,6,2,.88),rgba(8,3,0,.94));border:1px solid rgba(201,168,76,.3);border-radius:22px;backdrop-filter:blur(20px);position:relative;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,.7);}
+.player-card::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1.5px;background:linear-gradient(90deg,transparent,var(--g2),var(--e2),var(--g2),transparent);}
+.holo{position:absolute;inset:0;border-radius:22px;pointer-events:none;background:linear-gradient(105deg,transparent 40%,rgba(201,168,76,.04) 50%,rgba(255,107,0,.03) 60%,transparent 70%);background-size:200% 200%;animation:holoM 4s ease-in-out infinite;}
+@keyframes holoM{0%{background-position:0% 50%;}50%{background-position:100% 50%;}100%{background-position:0% 50%;}}
+.score-pill{background:linear-gradient(135deg,rgba(201,168,76,.12),rgba(255,69,0,.05));border:1px solid rgba(201,168,76,.3);border-radius:16px;padding:10px 14px;text-align:center;min-width:70px;}
+.logo-fix{object-fit:cover;border-radius:50%;background:#000;}
+
+/* ── WHEEL ── */
+.wbtn{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,rgba(16,6,2,.95),rgba(8,3,0,.98));border:2px solid rgba(201,168,76,.5);display:flex;align-items:center;justify-content:center;position:relative;transition:transform .3s;animation:wPls 2.5s ease-in-out infinite;}
+@keyframes wPls{0%,100%{box-shadow:0 0 0 0 rgba(201,168,76,.5),0 0 20px rgba(201,168,76,.15);}50%{box-shadow:0 0 0 14px rgba(201,168,76,0),0 0 35px rgba(201,168,76,.25);}}
+.wbtn:hover{transform:scale(1.1) rotate(15deg);}
+.wbtn:hover .wi{transform:rotate(360deg);}
+.wi{font-size:40px;color:var(--g2);transition:transform .8s cubic-bezier(.175,.885,.32,1.275);}
+.wlbl{position:absolute;bottom:0;left:50%;transform:translateX(-50%);background:linear-gradient(90deg,var(--g3),var(--g2),var(--e2));padding:3px 14px;border-radius:999px;font-family:'Amiri',serif;font-size:12px;font-weight:700;color:#0a0300;white-space:nowrap;box-shadow:0 2px 12px rgba(201,168,76,.4);}
+
+/* ── TABS ── */
+.tabs{display:flex;background:rgba(4,2,0,.8);padding:5px;border-radius:18px;border:1px solid rgba(255,255,255,.04);}
+.tab-btn{flex:1;padding:11px;border-radius:14px;font-family:'Amiri',serif;font-size:15px;font-weight:700;border:none;color:rgba(255,255,255,.45);background:none;transition:all .3s;}
+.tab-btn.active{background:linear-gradient(135deg,var(--g3),var(--g1),var(--g2));color:#0a0300;box-shadow:0 3px 18px rgba(201,168,76,.45);}
+.tab-btn:not(.active):hover{color:rgba(255,255,255,.85);}
+
+/* ── DAY CARDS ── */
+.day-done{background:linear-gradient(135deg,rgba(6,78,59,.25),rgba(5,46,22,.4));border:1px solid rgba(34,197,94,.22);border-right:3px solid rgba(34,197,94,.7);border-radius:16px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;transition:all .3s;}
+.day-done:hover{transform:translateX(-4px);border-right-color:rgba(34,197,94,1);}
+.day-active{background:linear-gradient(135deg,rgba(201,168,76,.14),rgba(255,69,0,.06));border:1.5px solid rgba(201,168,76,.7);border-radius:16px;padding:16px;display:flex;justify-content:space-between;align-items:center;position:relative;overflow:hidden;transition:transform .3s;animation:actP 2s infinite;}
+.day-active::after{content:'';position:absolute;inset:0;background:linear-gradient(105deg,transparent 40%,rgba(201,168,76,.06) 50%,transparent 60%);animation:cardSh 2.5s ease-in-out infinite;}
+@keyframes cardSh{0%{transform:translateX(-100%);}100%{transform:translateX(200%);}}
+.day-active:hover{transform:scale(1.02);box-shadow:0 8px 30px rgba(201,168,76,.22);}
+@keyframes actP{0%{box-shadow:0 0 0 0 rgba(201,168,76,.6)}70%{box-shadow:0 0 0 16px rgba(201,168,76,0)}100%{box-shadow:0 0 0 0 rgba(201,168,76,0)}}
+.day-locked{background:rgba(4,2,0,.4);border:1px solid rgba(255,255,255,.04);border-radius:14px;padding:12px 16px;display:flex;align-items:center;gap:12px;}
+
+/* ── GLASS ── */
+.glass-card{background:rgba(12,5,2,.75);border:1px solid rgba(201,168,76,.18);backdrop-filter:blur(16px);box-shadow:0 8px 32px rgba(0,0,0,.7);}
+
+/* ── QUIZ OVERLAY ── */
+#quiz-overlay{position:fixed;inset:0;background:rgba(0,0,8,.98);z-index:2147483647!important;display:none;align-items:center;justify-content:center;padding:10px;}
+.quiz-box{width:100%;max-width:460px;background:linear-gradient(145deg,rgba(12,5,2,.98),rgba(4,2,0,.99));border:1px solid rgba(201,168,76,.35);border-radius:22px;padding:22px;box-shadow:0 30px 80px rgba(0,0,0,.95);}
+
+/* ── AC MODAL ── */
+@keyframes acFadeIn{from{opacity:0}to{opacity:1}}
+@keyframes acPop{from{transform:scale(.65);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes acShk{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-9px)}40%,80%{transform:translateX(9px)}}
+
+/* ── CUSTOM ALERT ── */
+#custom-alert{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:999999;display:none;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(10px);}
+#alert-box{background:linear-gradient(145deg,rgba(16,6,2,.97),rgba(8,3,0,.99));border:1px solid rgba(201,168,76,.3);border-radius:24px;padding:28px 22px;width:100%;max-width:340px;text-align:center;position:relative;overflow:hidden;transform:scale(.9);transition:transform .25s cubic-bezier(.175,.885,.32,1.275);}
+#alert-box::before{content:'';position:absolute;top:0;left:15%;right:15%;height:1.5px;background:linear-gradient(90deg,transparent,var(--g2),transparent);}
+
+/* ── SPIN OVERLAY ── */
+#spin-overlay{position:fixed;inset:0;background:rgba(0,0,8,.97);z-index:99999;display:none;flex-direction:column;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(20px);}
+.spin-card{background:linear-gradient(145deg,rgba(16,6,2,.97),rgba(8,3,0,.99));border:1.5px solid rgba(201,168,76,.45);border-radius:28px;padding:28px 24px;width:100%;max-width:340px;text-align:center;position:relative;overflow:hidden;box-shadow:0 0 80px rgba(201,168,76,.12),0 40px 80px rgba(0,0,0,.9);}
+.spin-card::before{content:'';position:absolute;top:0;left:15%;right:15%;height:2px;background:linear-gradient(90deg,transparent,var(--g2),var(--e2),var(--g2),transparent);}
+.legendary-wheel{background:conic-gradient(rgba(6,78,59,.9) 0 60deg,rgba(120,53,15,.9) 60deg 120deg,rgba(30,58,138,.9) 120deg 180deg,rgba(76,29,149,.9) 180deg 240deg,rgba(127,29,29,.9) 240deg 300deg,rgba(15,5,0,.9) 300deg 360deg);border-radius:50%;border:6px solid var(--g1);box-shadow:0 0 60px rgba(201,168,76,.5),0 0 30px rgba(255,69,0,.2),inset 0 0 40px rgba(0,0,0,.9);}
+
+/* ── NIGHT Q ── */
+.night-star{position:absolute;width:2px;height:2px;background:#fff;border-radius:50%;animation:starTw 2.5s ease-in-out infinite;}
+@keyframes starTw{0%,100%{opacity:.2;transform:scale(1);}50%{opacity:1;transform:scale(1.6);}}
+@keyframes moonPulse{0%,100%{box-shadow:0 0 24px rgba(139,92,246,.35);}50%{box-shadow:0 0 40px rgba(139,92,246,.65);}}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+body.hide-ads #main-ui,body.hide-ads iframe,body.hide-ads ins{display:none!important;}
+body.hide-ads{overflow:hidden!important;background:var(--bg)!important;}
+.powerup-badge{position:absolute;top:-8px;right:-8px;background:#7C3AED;color:#fff;font-family:'Cairo',sans-serif;font-weight:900;font-size:10px;padding:2px 7px;border-radius:999px;border:2px solid #06010F;z-index:5;}
+.hidden{display:none!important;}
+</style>
+</head>
+<body>
+
+<div id="CR"><svg width="22" height="22" viewBox="0 0 22 22"><polygon points="11,1 13.2,7.8 20,7.8 14.4,12.2 16.6,19 11,14.6 5.4,19 7.6,12.2 2,7.8 8.8,7.8" fill="none" stroke="#F0C96B" stroke-width="1.5" stroke-linejoin="round"/></svg></div>
+<div id="CRR"></div>
+
+<div class="rambg"></div>
+<canvas id="SC"></canvas>
+
+<div class="fp" style="--l:5%;--s:4px;--d:3s;--dl:0s;--x:25px;--x2:50px;"></div>
+<div class="fp" style="--l:95%;--s:5px;--d:2.5s;--dl:.8s;--x:-30px;--x2:-60px;"></div>
+<div class="fp" style="--l:50%;--s:3px;--d:4s;--dl:1.5s;--x:20px;--x2:40px;"></div>
+
+<div class="lan L"><div class="lw"></div><div class="lc"></div><div class="lb"></div><div class="lt"></div></div>
+<div class="lan R"><div class="lw"></div><div class="lc"></div><div class="lb"></div><div class="lt"></div></div>
+
+<!-- CUSTOM ALERT — نفس structure الأصلي بالضبط -->
+<div id="custom-alert">
+  <div class="glass-card" id="alert-box" style="max-width:340px;width:100%;padding:24px 20px;">
+    <div id="alert-icon" style="font-size:52px;margin-bottom:12px;"></div>
+    <h3 id="alert-title" style="font-family:'Amiri',serif;font-size:22px;font-weight:700;margin-bottom:8px;"></h3>
+    <p id="alert-msg" style="font-family:'Cairo',sans-serif;color:rgba(255,255,255,.5);font-weight:700;font-size:13px;margin-bottom:20px;line-height:1.7;"></p>
+    <button onclick="closeCustomAlert()" style="width:100%;padding:14px;border:none;border-radius:13px;font-family:'Amiri',serif;font-size:17px;font-weight:700;background:linear-gradient(135deg,var(--g3),var(--g2));color:#0a0300;box-shadow:0 4px 20px rgba(201,168,76,.4);">حسناً يا بطل 👊</button>
+  </div>
+</div>
+
+<!-- AC MODAL — فوق كل حاجة بـ z-index أعلى من quiz-overlay -->
+<div id="ac-modal" style="position:fixed;inset:0;background:rgba(0,0,0,.93);z-index:2147483647;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(16px);">
+  <div class="ac-box" style="background:linear-gradient(160deg,rgba(22,4,4,.99),rgba(10,2,2,.99));border:1.5px solid rgba(239,68,68,.55);border-radius:26px;padding:32px 22px;max-width:340px;width:100%;text-align:center;box-shadow:0 0 80px rgba(239,68,68,.22),0 30px 70px rgba(0,0,0,.95);position:relative;overflow:hidden;animation:acPop .35s cubic-bezier(.175,.885,.32,1.275) both;">
+    <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(239,68,68,.7),rgba(255,100,0,.5),rgba(239,68,68,.7),transparent);"></div>
+    <span style="font-size:64px;display:block;margin-bottom:14px;animation:acShk .6s ease .3s both;">🚨</span>
+    <h2 style="font-family:'Amiri',serif;color:#ef4444;font-size:24px;font-weight:700;margin-bottom:8px;">تحذير!</h2>
+    <p id="ac-msg" style="font-family:'Cairo',sans-serif;color:#fca5a5;font-size:14px;font-weight:700;line-height:1.8;margin-bottom:5px;">حاولت الخروج من الكويز!</p>
+    <p style="font-family:'Cairo',sans-serif;color:rgba(248,113,113,.6);font-size:12px;font-weight:700;margin-bottom:22px;">النقاط محتسبة حتى هذه اللحظة.</p>
+    <button onclick="acContinue()" style="width:100%;padding:14px;border-radius:14px;border:none;font-family:'Amiri',serif;font-size:17px;font-weight:700;background:linear-gradient(135deg,#16a34a,#15803d);color:#fff;box-shadow:0 4px 18px rgba(22,163,74,.45);margin-bottom:11px;transition:transform .15s;">✅ أكمل الكويز</button>
+    <button onclick="acExit()" style="width:100%;padding:14px;border-radius:14px;border:1px solid rgba(239,68,68,.35);font-family:'Amiri',serif;font-size:17px;font-weight:700;background:linear-gradient(135deg,rgba(153,27,27,.6),rgba(127,29,29,.7));color:#fca5a5;transition:transform .15s;">خروج (النقاط ستُحسب) 🚪</button>
+  </div>
+</div>
+
+<!-- TOP BAR -->
+<div class="top-bar">
+  <div style="display:flex;align-items:center;gap:8px;">
+    <div class="pw frz"><i class="fas fa-snowflake" style="color:#60A5FA;font-size:11px;"></i><span id="inv-freeze">0</span></div>
+    <div class="pw fft"><i class="fas fa-cut" style="color:#A78BFA;font-size:11px;"></i><span id="inv-5050">0</span></div>
+  </div>
+  <button onclick="logoutUser()" class="logout-btn"><i class="fas fa-power-off" style="font-size:11px;"></i> خروج</button>
+</div>
+
+<!-- MAIN -->
+<div id="main-ui" style="padding:16px;padding-top:78px;padding-bottom:110px;">
+
+  <!-- PLAYER CARD -->
+  <header class="player-card mb-5" style="max-width:480px;margin-left:auto;margin-right:auto;padding:16px;" id="pcard">
+    <div class="holo"></div>
+    <div style="position:absolute;top:-30px;right:-30px;width:120px;height:120px;background:radial-gradient(circle,rgba(201,168,76,.07),transparent 70%);border-radius:50%;pointer-events:none;"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;">
+      <div style="display:flex;align-items:center;gap:12px;flex:1;overflow:hidden;">
+        <div style="position:relative;flex-shrink:0;">
+          <img src="https://i.postimg.cc/QN7YYDZb/1772330473684.png" class="logo-fix" style="width:56px;height:56px;border:2px solid rgba(201,168,76,.5);box-shadow:0 0 20px rgba(255,100,0,.3);">
+          <div style="position:absolute;bottom:-2px;right:-2px;width:14px;height:14px;background:#22c55e;border-radius:50%;border:2px solid var(--bg);box-shadow:0 0 8px rgba(34,197,94,.7);"></div>
+        </div>
+        <div style="overflow:hidden;flex:1;">
+          <h2 id="p-name" style="font-family:'Amiri',serif;font-weight:700;color:#fff;font-size:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">...</h2>
+          <span id="p-group" style="display:inline-block;margin-top:3px;color:var(--g2);font-family:'Cairo',sans-serif;font-weight:700;background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.25);padding:2px 10px;border-radius:8px;font-size:11px;max-width:140px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">...</span>
+        </div>
+      </div>
+      <div class="score-pill" style="flex-shrink:0;">
+        <p style="font-family:'Cairo',sans-serif;font-size:9px;color:rgba(255,255,255,.3);font-weight:700;margin-bottom:2px;">نقاطك</p>
+        <p id="p-score" style="font-family:'Amiri',serif;font-weight:700;font-size:32px;color:var(--g2);line-height:1;">0</p>
+        <p style="font-family:'Cairo',sans-serif;font-size:9px;color:rgba(201,168,76,.35);font-weight:700;">pt</p>
+      </div>
+    </div>
+  </header>
+
+  <!-- WHEEL -->
+  <div style="max-width:480px;margin:0 auto 28px;display:flex;justify-content:center;">
+    <div onclick="openSpinWheel()" style="position:relative;padding-bottom:22px;">
+      <div class="wbtn"><i class="fas fa-dharmachakra wi"></i></div>
+      <div id="streak-badge" style="position:absolute;top:-8px;right:-8px;background:linear-gradient(135deg,var(--e1),var(--e2));color:#fff;font-family:'Cairo',sans-serif;font-weight:900;font-size:11px;padding:3px 8px;border-radius:999px;border:2px solid var(--bg);box-shadow:0 2px 8px rgba(255,69,0,.5);">0/3</div>
+      <div class="wlbl">عجلة الهدايا 🎁</div>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs" style="max-width:480px;margin:0 auto 20px;">
+    <button onclick="showTab('arena')" id="btn-arena" class="tab-btn active">🗺️ الخريطة</button>
+    <button onclick="showTab('leaderboard')" id="btn-leader" class="tab-btn">🏆 المجموعة</button>
+  </div>
+
+  <!-- MAP -->
+  <div id="view-arena" style="max-width:480px;margin:0 auto;padding-bottom:40px;"></div>
+
+  <!-- LEADERBOARD -->
+  <div id="view-leaderboard" class="hidden" style="max-width:480px;margin:0 auto;padding-bottom:40px;">
+    <div class="glass-card" style="padding:24px;border-radius:24px;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px;">
+        <div style="height:1px;flex:1;background:linear-gradient(to right,transparent,rgba(201,168,76,.4));"></div>
+        <span style="font-family:'Amiri',serif;font-size:15px;color:rgba(201,168,76,.65);font-weight:700;">ترتيب المجموعة 🏆</span>
+        <div style="height:1px;flex:1;background:linear-gradient(to left,transparent,rgba(201,168,76,.4));"></div>
+      </div>
+      <div id="group-list" style="display:flex;flex-direction:column;gap:10px;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- QUIZ OVERLAY -->
+<div id="quiz-overlay"><div class="quiz-box" id="quiz-content"></div></div>
+
+<!-- NIGHT Q -->
+<div id="nq-overlay" style="position:fixed;inset:0;background:radial-gradient(ellipse at 50% 30%,rgba(20,5,60,.98) 0%,rgba(0,0,8,.99) 100%);z-index:2147483640;display:none;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(4px);">
+  <div style="position:absolute;inset:0;pointer-events:none;overflow:hidden;">
+    <div class="night-star" style="top:5%;left:10%;width:3px;height:3px;"></div>
+    <div class="night-star" style="top:12%;left:80%;animation-delay:.6s;"></div>
+    <div class="night-star" style="top:8%;left:45%;animation-delay:1.2s;"></div>
+    <div class="night-star" style="top:20%;left:25%;width:3px;height:3px;animation-delay:.3s;"></div>
+    <div class="night-star" style="top:18%;left:65%;animation-delay:1.8s;"></div>
+    <div class="night-star" style="top:88%;left:15%;animation-delay:.9s;"></div>
+    <div class="night-star" style="top:85%;left:75%;width:3px;height:3px;animation-delay:.4s;"></div>
+    <div class="night-star" style="top:90%;left:50%;animation-delay:1.5s;"></div>
+  </div>
+  <div id="nq-box" style="width:100%;max-width:440px;background:linear-gradient(160deg,rgba(15,8,45,.98),rgba(8,5,28,.99));border:1px solid rgba(167,139,250,.4);border-radius:26px;padding:24px 20px;box-shadow:0 0 80px rgba(100,50,220,.25),0 30px 60px rgba(0,0,0,.9);position:relative;overflow:hidden;">
+    <div style="position:absolute;top:-40px;right:-40px;width:140px;height:140px;background:rgba(124,58,237,.15);border-radius:50%;filter:blur(40px);pointer-events:none;"></div>
+    <div style="position:absolute;bottom:-30px;left:-30px;width:110px;height:110px;background:rgba(76,29,149,.2);border-radius:50%;filter:blur(35px);pointer-events:none;"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;position:relative;">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span style="font-size:28px;filter:drop-shadow(0 0 12px rgba(200,160,255,.9));animation:moonPulse 3s ease-in-out infinite;">🌙</span>
+        <div>
+          <div style="font-family:'Cairo',sans-serif;font-size:10px;color:rgba(167,139,250,.75);font-weight:700;letter-spacing:1.5px;">سؤال الليلة</div>
+          <div style="font-family:'Amiri',serif;font-size:17px;font-weight:700;color:#fff;">التحدي الليلي 🌟</div>
+        </div>
+      </div>
+      <div style="text-align:center;">
+        <div style="font-family:'Cairo',sans-serif;font-size:9px;color:rgba(167,139,250,.6);font-weight:700;">نقاط الجائزة</div>
+        <div id="nq-prize-pts" style="font-family:'Amiri',serif;font-size:24px;font-weight:700;color:#c4b5fd;line-height:1;">×2</div>
+      </div>
+    </div>
+    <div style="height:1px;background:linear-gradient(to right,transparent,rgba(167,139,250,.3),transparent);margin-bottom:20px;"></div>
+    <div id="nq-content" style="position:relative;">
+      <div style="text-align:center;padding:30px;">
+        <div style="font-size:30px;margin-bottom:10px;animation:moonPulse 2s ease-in-out infinite;">🌙</div>
+        <p style="font-family:'Cairo',sans-serif;color:rgba(167,139,250,.7);font-weight:700;">جاري تجهيز سؤال الليلة...</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SPIN OVERLAY -->
+<div id="spin-overlay">
+  <div class="spin-card">
+    <button onclick="closeSpinWheel()" style="position:absolute;top:12px;left:16px;color:rgba(255,255,255,.3);font-size:24px;font-weight:900;background:none;border:none;transition:color .2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.3)'">&times;</button>
+    <h2 style="font-family:'Amiri',serif;font-size:26px;font-weight:700;color:var(--g2);margin-bottom:6px;">عجلة الحظ 🎁</h2>
+    <p style="font-family:'Cairo',sans-serif;color:rgba(255,255,255,.35);font-size:13px;margin-bottom:22px;font-weight:700;">مكافأة أسطورية لالتزامك 3 أيام!</p>
+    <div style="position:relative;width:240px;height:240px;margin:0 auto 22px;">
+      <div style="position:absolute;top:-24px;left:50%;transform:translateX(-50%);font-size:40px;color:var(--g1);z-index:20;filter:drop-shadow(0 0 8px rgba(201,168,76,.8));">▼</div>
+      <div id="wheel-spinner" class="legendary-wheel" style="width:100%;height:100%;transition:transform 4000ms cubic-bezier(0.17,0.67,0.12,0.99);">
+        <div style="position:absolute;inset:0;transform:rotate(30deg);"><div style="position:absolute;top:10px;width:100%;text-align:center;font-family:'Cairo',sans-serif;font-weight:900;color:rgba(255,255,255,.9);font-size:12px;">حظ أوفر</div></div>
+        <div style="position:absolute;inset:0;transform:rotate(90deg);"><div style="position:absolute;top:10px;width:100%;text-align:center;font-family:'Cairo',sans-serif;font-weight:900;color:rgba(255,255,255,.9);font-size:12px;">10 نقاط</div></div>
+        <div style="position:absolute;inset:0;transform:rotate(150deg);"><div style="position:absolute;top:10px;width:100%;text-align:center;font-family:'Cairo',sans-serif;font-weight:900;color:rgba(255,255,255,.9);font-size:12px;">تجميد</div></div>
+        <div style="position:absolute;inset:0;transform:rotate(210deg);"><div style="position:absolute;top:10px;width:100%;text-align:center;font-family:'Cairo',sans-serif;font-weight:900;color:rgba(255,255,255,.9);font-size:12px;transform:rotate(180deg);">20 نقطة</div></div>
+        <div style="position:absolute;inset:0;transform:rotate(270deg);"><div style="position:absolute;top:10px;width:100%;text-align:center;font-family:'Cairo',sans-serif;font-weight:900;color:rgba(255,255,255,.9);font-size:12px;transform:rotate(180deg);">إجابتين</div></div>
+        <div style="position:absolute;inset:0;transform:rotate(330deg);"><div style="position:absolute;top:10px;width:100%;text-align:center;font-family:'Cairo',sans-serif;font-weight:900;color:rgba(255,255,255,.9);font-size:12px;transform:rotate(180deg);">50 نقطة</div></div>
+      </div>
+      <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:36px;height:36px;background:rgba(4,2,0,.95);border:3px solid var(--g1);border-radius:50%;z-index:10;box-shadow:0 0 20px rgba(201,168,76,.5);"></div>
+    </div>
+    <div id="wheel-controls" style="width:100%;"></div>
+  </div>
+</div>
+
+<script>
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js');
+
+// ── CURSOR ──
+const CR=document.getElementById('CR'),CRR=document.getElementById('CRR');
+document.addEventListener('mousemove',e=>{CR.style.left=e.clientX+'px';CR.style.top=e.clientY+'px';CRR.style.left=e.clientX+'px';CRR.style.top=e.clientY+'px';});
+document.addEventListener('mousedown',()=>{CR.style.transform='translate(-50%,-50%) scale(.65)';CRR.style.transform='translate(-50%,-50%) scale(1.5)';CRR.style.borderColor='rgba(255,107,0,.9)';});
+document.addEventListener('mouseup',()=>{CR.style.transform='translate(-50%,-50%) scale(1)';CRR.style.transform='translate(-50%,-50%) scale(1)';CRR.style.borderColor='rgba(201,168,76,.5)';});
+
+// ── STARS CANVAS ──
+const sc=document.getElementById('SC'),scx=sc.getContext('2d');
+sc.width=innerWidth;sc.height=innerHeight;
+const strs=Array.from({length:160},()=>({x:Math.random()*sc.width,y:Math.random()*sc.height,r:Math.random()*1.5+.2,ph:Math.random()*Math.PI*2,sp:Math.random()*.012+.003,g:Math.random()>.82}));
+(function animS(t){scx.clearRect(0,0,sc.width,sc.height);strs.forEach(s=>{const op=.12+.65*Math.abs(Math.sin(t*.001*s.sp+s.ph));scx.beginPath();scx.arc(s.x,s.y,s.r,0,Math.PI*2);scx.fillStyle=s.g?`rgba(201,168,76,${op})`:`rgba(255,255,255,${op})`;scx.fill();});requestAnimationFrame(animS);})(0);
+
+// ── SOUND ──
+function snd(){try{const a=new(AudioContext||webkitAudioContext)(),o=a.createOscillator(),g=a.createGain();o.connect(g);g.connect(a.destination);o.frequency.setValueAtTime(700,a.currentTime);o.frequency.exponentialRampToValueAtTime(350,a.currentTime+.08);g.gain.setValueAtTime(.1,a.currentTime);g.gain.exponentialRampToValueAtTime(.001,a.currentTime+.12);o.start();o.stop(a.currentTime+.12);}catch(e){}}
+document.addEventListener('click',snd);
+
+// ── AC MODAL — نفس API الأصلي بالظبط ──
+let _acShown=false;
+window.showAcWarning=function(msg){
+  if(_acShown)return;_acShown=true;
+  const el=document.getElementById('ac-modal'),msgEl=document.getElementById('ac-msg');
+  if(msgEl)msgEl.textContent=msg||'حاولت الخروج أثناء الكويز!';
+  if(el){el.style.display='flex';}
+};
+window.acContinue=function(){
+  _acShown=false;
+  document.getElementById('ac-modal').style.display='none';
+  window.isQuizActive=true;
+  if(window._acResume)window._acResume();
+};
+window.acExit=function(){
+  _acShown=false;
+  document.getElementById('ac-modal').style.display='none';
+  window.isQuizActive=false;
+  if(window._acForceEnd)window._acForceEnd();
+};
+
+// screenshot
+document.addEventListener('keyup',function(e){
+  if(e.keyCode===44){navigator.clipboard&&navigator.clipboard.writeText('').catch(()=>{});if(window.isQuizActive)window.showAcWarning('📸 محاولة التقاط لقطة شاشة محظورة!');}
+});
+
+// ── RENDER MAP — نفس الأصلي لكن بخط Amiri ──
+window.__renderMapEnhanced=function(container,myLogs,adminDay,adminStatus){
+  if(!container)return;
+  const played=Object.keys(myLogs).length,total=Object.values(myLogs).reduce((a,b)=>a+(b||0),0);
+  let html=`
+    <div style="text-align:center;margin-bottom:14px;">
+      <div style="display:flex;align-items:center;gap:10px;justify-content:center;">
+        <div style="height:1px;flex:1;background:linear-gradient(to right,transparent,rgba(201,168,76,.45));"></div>
+        <span style="font-family:'Amiri',serif;font-size:15px;color:rgba(201,168,76,.7);font-weight:700;">رحلة رمضان ✨</span>
+        <div style="height:1px;flex:1;background:linear-gradient(to left,transparent,rgba(201,168,76,.45));"></div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
+      <div style="background:linear-gradient(135deg,rgba(34,197,94,.12),rgba(22,163,74,.04));border:1px solid rgba(34,197,94,.22);border-radius:16px;padding:16px;text-align:center;position:relative;overflow:hidden;">
+        <div style="position:absolute;top:0;left:0;right:0;height:1.5px;background:linear-gradient(90deg,transparent,rgba(34,197,94,.5),transparent);"></div>
+        <div style="font-family:'Amiri',serif;font-size:32px;font-weight:700;color:#4ade80;">${played}</div>
+        <div style="font-family:'Cairo',sans-serif;font-size:10px;color:rgba(255,255,255,.35);font-weight:700;">جولة مكتملة</div>
+      </div>
+      <div style="background:linear-gradient(135deg,rgba(201,168,76,.12),rgba(255,69,0,.04));border:1px solid rgba(201,168,76,.22);border-radius:16px;padding:16px;text-align:center;position:relative;overflow:hidden;">
+        <div style="position:absolute;top:0;left:0;right:0;height:1.5px;background:linear-gradient(90deg,transparent,rgba(201,168,76,.5),transparent);"></div>
+        <div style="font-family:'Amiri',serif;font-size:32px;font-weight:700;color:var(--g2);">${total}</div>
+        <div style="font-family:'Cairo',sans-serif;font-size:10px;color:rgba(255,255,255,.35);font-weight:700;">نقطة محصودة</div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:9px;">`;
+
+  for(let i=1;i<=30;i++){
+    const isP=myLogs[i]!==undefined,isA=(i===adminDay&&adminStatus==='active');
+    if(isP){
+      const s=myLogs[i],stars=s>=5?'⭐⭐⭐':s>=3?'⭐⭐':'⭐';
+      html+=`<div class="day-done">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,rgba(34,197,94,.18),rgba(22,163,74,.05));border:1.5px solid rgba(34,197,94,.4);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 0 12px rgba(34,197,94,.2);">
+            <i class="fas fa-check" style="color:#4ade80;font-size:15px;"></i>
+          </div>
+          <div>
+            <div style="font-family:'Amiri',serif;font-weight:700;color:rgba(255,255,255,.9);font-size:16px;">الجولة ${i}</div>
+            <div style="font-size:11px;color:rgba(34,197,94,.6);font-weight:700;margin-top:1px;">${stars}</div>
+          </div>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-family:'Amiri',serif;font-weight:700;font-size:30px;color:#4ade80;line-height:1;">${s}</div>
+          <div style="font-family:'Cairo',sans-serif;font-size:9px;color:rgba(74,222,128,.4);font-weight:700;">نقطة</div>
+        </div>
+      </div>`;
+    } else if(isA){
+      html+=`<div onclick="window.openQuiz(${i})" class="day-active">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--g2),var(--e2),var(--g1));display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(201,168,76,.5),0 0 40px rgba(255,69,0,.2);flex-shrink:0;">
+            <i class="fas fa-play" style="color:#0a0300;font-size:18px;margin-right:3px;"></i>
+          </div>
+          <div>
+            <div style="font-family:'Amiri',serif;font-weight:700;color:#fff;font-size:20px;">الجولة ${i}</div>
+            <div style="font-family:'Cairo',sans-serif;font-size:11px;color:var(--g2);font-weight:700;margin-top:2px;">العب الآن! 🔥</div>
+          </div>
+        </div>
+        <div style="background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.3);border-radius:12px;padding:8px 14px;text-align:center;">
+          <div style="font-family:'Cairo',sans-serif;font-size:10px;color:rgba(201,168,76,.5);font-weight:700;">نقاط</div>
+          <div style="font-family:'Amiri',serif;font-size:22px;font-weight:700;color:var(--g2);">?</div>
+        </div>
+      </div>`;
+    } else {
+      html+=`<div class="day-locked" style="opacity:${i<adminDay?.28:.4}">
+        <div style="width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <i class="fas fa-lock" style="color:rgba(255,255,255,.15);font-size:11px;"></i>
+        </div>
+        <div style="font-family:'Amiri',serif;font-weight:700;font-size:14px;color:rgba(255,255,255,.2);">الجولة ${i}</div>
+      </div>`;
+    }
+  }
+  html+=`</div>`;
+  container.innerHTML=html;
+};
+</script>
+</body>
+</html>
