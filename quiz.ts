@@ -35,6 +35,208 @@ let freeFreeze: number = 1;
 
 // ── نظام مكافحة الغش ─────────────────────────────────────────
 
+// 🔒 حماية الـ Screenshot — الشاشة تبقى سودة لما حد ياخد screenshot
+(function injectScreenshotProtectionCSS(): void {
+  const style = document.createElement("style");
+  style.id = "screenshot-protection-style";
+  style.textContent = `
+    @media print {
+      body * { visibility: hidden !important; }
+      body::after {
+        content: "🔒 المحتوى محمي";
+        visibility: visible !important;
+        position: fixed; top: 50%; left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 32px; font-weight: 900;
+        color: #C9A84C; font-family: 'Cairo', sans-serif;
+      }
+    }
+  `;
+  document.head.appendChild(style);
+
+  // CSS content-visibility trick — يخلي screenshot يطلع أسود على معظم الأجهزة
+  const quizOverlay = document.getElementById("quiz-overlay");
+  if (quizOverlay) {
+    quizOverlay.style.webkitUserSelect = "none";
+    quizOverlay.style.userSelect = "none";
+  }
+})();
+
+// 🔙 حماية زر الـ Back — رسالة تحذير حلوة وحفظ النقط
+let _backGuardActive: boolean = false;
+
+function activateBackGuard(): void {
+  if (_backGuardActive) return;
+  _backGuardActive = true;
+  history.pushState({ quizGuard: true }, "");
+
+  window.addEventListener("popstate", _handlePopState);
+}
+
+function deactivateBackGuard(): void {
+  _backGuardActive = false;
+  window.removeEventListener("popstate", _handlePopState);
+}
+
+function _handlePopState(e: PopStateEvent): void {
+  if (!isQuizActive) return;
+
+  // أرجع الـ state تاني عشان نفضل نحمي
+  history.pushState({ quizGuard: true }, "");
+
+  // وقف التايمر واقفل الأزرار
+  if (timerInterval) clearInterval(timerInterval);
+  document.querySelectorAll<HTMLButtonElement>(".opt-btn").forEach((btn) => {
+    btn.style.pointerEvents = "none";
+  });
+
+  // اعرض Modal التحذير الجميل
+  _showBackWarningModal();
+}
+
+function _showBackWarningModal(): void {
+  // شيل أي modal قديم
+  document.getElementById("_backWarnModal")?.remove();
+
+  const modal = document.createElement("div");
+  modal.id = "_backWarnModal";
+  modal.style.cssText = `
+    position:fixed;inset:0;z-index:999999;
+    display:flex;align-items:center;justify-content:center;
+    background:rgba(6,1,15,0.92);backdrop-filter:blur(12px);
+    font-family:'Cairo',sans-serif;direction:rtl;
+    animation:fadeIn .25s ease;
+  `;
+
+  modal.innerHTML = `
+    <style>
+      @keyframes warnPulse { 0%,100%{transform:scale(1);} 50%{transform:scale(1.08);} }
+      @keyframes fadeIn { from{opacity:0;transform:scale(0.93);} to{opacity:1;transform:scale(1);} }
+      @keyframes shake { 0%,100%{transform:translateX(0);} 20%,60%{transform:translateX(-8px);} 40%,80%{transform:translateX(8px);} }
+    </style>
+    <div style="
+      background:linear-gradient(145deg,rgba(20,8,42,0.98),rgba(10,4,24,0.99));
+      border:2px solid rgba(239,68,68,0.5);
+      border-radius:24px;padding:32px 28px;max-width:340px;width:90%;
+      text-align:center;
+      box-shadow:0 0 60px rgba(239,68,68,0.2),0 20px 60px rgba(0,0,0,0.8);
+      animation:shake .4s ease;
+    ">
+      <div style="
+        width:72px;height:72px;margin:0 auto 18px;
+        background:rgba(239,68,68,0.12);border:2px solid rgba(239,68,68,0.4);
+        border-radius:50%;display:flex;align-items:center;justify-content:center;
+        animation:warnPulse 1.5s infinite;
+      ">
+        <span style="font-size:34px;">⚠️</span>
+      </div>
+
+      <h2 style="font-size:22px;font-weight:900;color:#f87171;margin-bottom:10px;line-height:1.4;">
+        انتظر يا بطل! 🛑
+      </h2>
+      <p style="font-size:14px;color:rgba(255,255,255,0.65);font-weight:700;margin-bottom:8px;line-height:1.7;">
+        لو خرجت دلوقتي هتفقد باقي الأسئلة<br>
+        بس <span style="color:#fbbf24;">نقطك اللي حلّتها هتتحفظ</span> ✅
+      </p>
+      <p style="font-size:13px;color:rgba(255,255,255,0.35);margin-bottom:24px;">
+        عايز تكمل ولا تخرج؟
+      </p>
+
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <button id="_backWarnContinue" style="
+          width:100%;padding:14px;border-radius:14px;border:none;cursor:pointer;
+          background:linear-gradient(135deg,#059669,#10B981);
+          color:white;font-weight:900;font-size:16px;font-family:'Cairo',sans-serif;
+          box-shadow:0 4px 18px rgba(16,185,129,0.35);
+          transition:transform .15s;
+        " onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1)'">
+          كمّل المعركة ⚔️
+        </button>
+        <button id="_backWarnExit" style="
+          width:100%;padding:13px;border-radius:14px;cursor:pointer;
+          background:rgba(15,6,32,0.7);
+          border:1px solid rgba(239,68,68,0.35);
+          color:rgba(255,255,255,0.55);font-weight:700;font-size:14px;font-family:'Cairo',sans-serif;
+          transition:all .15s;
+        " onmouseover="this.style.borderColor='rgba(239,68,68,0.7)';this.style.color='#f87171'" onmouseout="this.style.borderColor='rgba(239,68,68,0.35)';this.style.color='rgba(255,255,255,0.55)'">
+          خروج وحفظ النقط 🚪
+        </button>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+
+  // زرار "كمّل"
+  document.getElementById("_backWarnContinue")?.addEventListener("click", () => {
+    modal.remove();
+    // شغّل التايمر تاني
+    document.querySelectorAll<HTMLButtonElement>(".opt-btn").forEach((btn) => {
+      btn.style.pointerEvents = "auto";
+    });
+    timerInterval = setInterval((): void => {
+      globalTimeLeft--;
+      const timerEl = document.getElementById("timer");
+      if (timerEl) timerEl.innerText = String(globalTimeLeft);
+      if (globalTimeLeft <= 0) window.handleAnswer(-1);
+    }, 1_000);
+  });
+
+  // زرار "خروج وحفظ"
+  document.getElementById("_backWarnExit")?.addEventListener("click", () => {
+    modal.remove();
+    deactivateBackGuard();
+    isQuizActive = false;
+    // حفظ النقط وارجع للصفحة السابقة
+    _saveScoreAndGoBack();
+  });
+}
+
+function _saveScoreAndGoBack(): void {
+  const content = document.getElementById("quiz-content");
+  const overlay = document.getElementById("quiz-overlay");
+
+  if (overlay) overlay.style.display = "flex";
+  if (content) {
+    content.innerHTML = `
+      <div style="text-align:center;padding:30px;">
+        <div style="width:52px;height:52px;border:3px solid rgba(201,168,76,0.3);border-top-color:var(--gold-light);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 16px;"></div>
+        <p style="color:var(--gold-light);font-weight:700;font-size:16px;">جاري حفظ نقطك...</p>
+      </div>`;
+  }
+
+  if (sessionScore === 0) {
+    // مفيش نقط تتحفظ، ارجع بس
+    deactivateBackGuard();
+    history.back();
+    return;
+  }
+
+  db!.collection("users")
+    .doc(currentUser!.id)
+    .update({ score: firebase.firestore.FieldValue.increment(sessionScore) })
+    .then((): Promise<void> => {
+      return db!
+        .collection("users")
+        .doc(currentUser!.id)
+        .collection("game_logs")
+        .doc(`day_${adminDay}`)
+        .set({
+          day: adminDay,
+          score: sessionScore,
+          timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        });
+    })
+    .then((): void => {
+      deactivateBackGuard();
+      history.back();
+    })
+    .catch((): void => {
+      deactivateBackGuard();
+      history.back();
+    });
+}
+
 document.addEventListener("visibilitychange", (): void => {
   if (document.hidden && isQuizActive && currentQuestions.length > 0 && currentIndex >= 0) {
     triggerAntiCheat("غادرت شاشة الكويز! اختر هل تكمل أم تخرج.");
@@ -121,6 +323,7 @@ window.startQuizFetch = function (day: number): void {
   freeFreeze = 1;
   used5050InRound = false;
   usedFreezeInRound = false;
+  activateBackGuard(); // 🔙 تفعيل حماية زر الرجوع
 
   const content = document.getElementById("quiz-content");
   if (content) {
@@ -307,109 +510,4 @@ window.handleAnswer = function (selectedIdx: number): void {
   if (!isQuizActive) return;
 
   if (timerInterval) clearInterval(timerInterval);
-  document.querySelectorAll<HTMLButtonElement>(".opt-btn").forEach((btn) => {
-    btn.style.pointerEvents = "none";
-  });
-
-  const correctIdx: number = currentQuestions[currentIndex].correctIndex;
-
-  if (selectedIdx !== -1) {
-    const selectedBtn = document.getElementById(`opt-${selectedIdx}`) as HTMLElement | null;
-
-    if (selectedIdx === correctIdx) {
-      sessionScore++;
-      if (selectedBtn) {
-        selectedBtn.style.background = "rgba(34,197,94,0.2)";
-        selectedBtn.style.borderColor = "rgba(34,197,94,0.7)";
-        selectedBtn.style.color = "#4ade80";
-        selectedBtn.innerHTML += ` <i class="fas fa-check-circle" style="float:left;margin-top:2px;font-size:18px;color:#4ade80;filter:drop-shadow(0 0 8px rgba(34,197,94,0.8));"></i>`;
-      }
-    } else {
-      if (selectedBtn) {
-        selectedBtn.style.background = "rgba(239,68,68,0.15)";
-        selectedBtn.style.borderColor = "rgba(239,68,68,0.6)";
-        selectedBtn.style.textDecoration = "line-through";
-        selectedBtn.style.opacity = "0.7";
-        selectedBtn.innerHTML += ` <i class="fas fa-times-circle" style="float:left;margin-top:2px;font-size:18px;color:#f87171;"></i>`;
-      }
-      const correctBtn = document.getElementById(`opt-${correctIdx}`) as HTMLElement | null;
-      if (correctBtn) {
-        correctBtn.style.borderColor = "rgba(34,197,94,0.5)";
-        correctBtn.style.color = "#86efac";
-      }
-    }
-  }
-
-  setTimeout((): void => {
-    currentIndex++;
-    used5050InRound = false;
-    usedFreezeInRound = false;
-    showQuestion();
-  }, 1_200);
-};
-
-// ── إنهاء الكويز ──────────────────────────────────────────────
-
-function endQuiz(): void {
-  isQuizActive = false;
-  if (timerInterval) clearInterval(timerInterval);
-
-  const content = document.getElementById("quiz-content");
-  if (content) {
-    content.innerHTML = `
-      <div style="text-align:center;padding:30px;">
-        <div style="width:52px;height:52px;border:3px solid rgba(201,168,76,0.3);border-top-color:var(--gold-light);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 16px;"></div>
-        <p style="color:var(--gold-light);font-weight:700;font-size:16px;">جاري توثيق المعركة...</p>
-      </div>`;
-  }
-
-  db!.collection("users")
-    .doc(currentUser!.id)
-    .update({ score: firebase.firestore.FieldValue.increment(sessionScore) })
-    .then((): Promise<void> => {
-      return db!
-        .collection("users")
-        .doc(currentUser!.id)
-        .collection("game_logs")
-        .doc(`day_${adminDay}`)
-        .set({
-          day: adminDay,
-          score: sessionScore,
-          timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-        });
-    })
-    .then((): void => {
-      if (window.confetti) {
-        void window.confetti({
-          particleCount: 200,
-          spread: 90,
-          origin: { y: 0.5 },
-          colors: ["#F0C96B", "#C9A84C", "#8B6914", "#ffffff"],
-        });
-      }
-
-      if (content) {
-        content.innerHTML = `
-          <div style="text-align:center;padding:16px;">
-            <div style="position:relative;display:inline-block;margin-bottom:20px;">
-              <div style="position:absolute;inset:0;background:rgba(201,168,76,0.3);border-radius:50%;filter:blur(20px);animation:pulse 2s infinite;"></div>
-              <div style="background:linear-gradient(135deg,rgba(20,8,42,0.95),rgba(10,4,24,0.98));border:2px solid rgba(201,168,76,0.5);padding:24px;border-radius:50%;position:relative;">
-                <i class="fas fa-trophy" style="font-size:52px;background:linear-gradient(180deg,#F0C96B,#8B6914);-webkit-background-clip:text;-webkit-text-fill-color:transparent;"></i>
-              </div>
-            </div>
-            <h2 style="font-size:28px;font-weight:900;color:white;margin-bottom:20px;">انتهت المعركة! 🔥</h2>
-            <div style="background:rgba(10,4,24,0.8);border:1px solid rgba(201,168,76,0.3);border-radius:20px;padding:24px;margin-bottom:24px;">
-              <p style="font-size:11px;color:rgba(255,255,255,0.4);font-weight:700;letter-spacing:2px;margin-bottom:6px;">غنائمك اليوم</p>
-              <p style="font-size:56px;font-weight:900;color:var(--gold-light);line-height:1;">${sessionScore}</p>
-              <p style="font-size:13px;color:rgba(201,168,76,0.5);font-weight:700;">نقطة</p>
-            </div>
-            <button onclick="window.location.replace('dashboard.html')" style="width:100%;background:linear-gradient(135deg,#8B6914,#D4AF37,#F0C96B);color:#1A0530;font-weight:900;font-size:17px;padding:15px;border-radius:14px;border:none;cursor:pointer;font-family:'Cairo',sans-serif;box-shadow:0 4px 20px rgba(201,168,76,0.4);">
-              العودة للمعسكر ⛺
-            </button>
-          </div>`;
-      }
-    })
-    .catch((err: Error): void => {
-      console.error("Error saving quiz:", err);
-    });
-}
+  document.querySelectorAll<HTMLButtonElement>(".opt-btn").forEach((
