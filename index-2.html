@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#06010f">
+    <link rel="apple-touch-icon" href="https://i.postimg.cc/QN7YYDZb/1772330473684.png">
+    <title>كويز الرمضاني | تسجيل الدخول</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #C9A84C; --gold-light: #F0C96B; --gold-dark: #8B6914;
+            --purple-deep: #1A0530; --purple-accent: #7C3AED; --bg-dark: #06010F;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Cairo', sans-serif; background: var(--bg-dark); color: white;
+            min-height: 100vh; display: flex; align-items: center; justify-content: center;
+            overflow: hidden; position: relative; }
+        .cosmic-bg { position:fixed;inset:0;z-index:0;
+            background: radial-gradient(ellipse at 20% 50%, rgba(124,58,237,0.18) 0%, transparent 60%),
+                        radial-gradient(ellipse at 80% 20%, rgba(201,168,76,0.12) 0%, transparent 50%),
+                        radial-gradient(ellipse at 50% 100%, rgba(13,148,136,0.10) 0%, transparent 60%),
+                        linear-gradient(180deg, #06010F 0%, #0D0220 50%, #06010F 100%); }
+        .stars-canvas { position:fixed;inset:0;z-index:1;pointer-events:none; }
+        .lanterns { position:fixed;top:0;width:100%;display:flex;justify-content:space-between;padding:0 8px;z-index:5;pointer-events:none; }
+        .lantern { display:flex;flex-direction:column;align-items:center;transform-origin:top center; }
+        .lantern.left { animation: swingL 3.5s ease-in-out infinite; }
+        .lantern.right { animation: swingR 3.2s ease-in-out infinite; }
+        @keyframes swingL { 0%,100%{transform:rotate(-7deg)} 50%{transform:rotate(7deg)} }
+        @keyframes swingR { 0%,100%{transform:rotate(7deg)} 50%{transform:rotate(-7deg)} }
+        .l-wire { width:1px;height:45px;background:linear-gradient(to bottom,rgba(201,168,76,0.5),rgba(201,168,76,0.1)); }
+        .l-cap { width:22px;height:7px;background:linear-gradient(180deg,var(--gold),var(--gold-dark));border-radius:4px 4px 0 0; }
+        .l-body-inner { width:20px;height:30px;border-radius:3px 3px 8px 8px;
+            background:linear-gradient(180deg,rgba(240,201,107,0.9),rgba(201,168,76,0.6));
+            animation:lanternGlow 2.5s ease-in-out infinite;position:relative;overflow:hidden; }
+        .l-body-inner::before { content:'';position:absolute;inset:0;
+            background:repeating-linear-gradient(90deg,transparent 0,transparent 3px,rgba(0,0,0,0.15) 3px,rgba(0,0,0,0.15) 4px); }
+        @keyframes lanternGlow {
+            0%,100%{box-shadow:0 0 12px 4px rgba(201,168,76,0.6),0 0 25px rgba(240,201,107,0.3)}
+            50%{box-shadow:0 0 20px 8px rgba(201,168,76,0.9),0 0 40px rgba(240,201,107,0.5)} }
+        .l-bottom { width:1px;height:8px;background:rgba(201,168,76,0.4); }
+        .login-card { position:relative;z-index:10;width:100%;max-width:380px;padding:0 16px; }
+        .card-inner {
+            background:linear-gradient(160deg,rgba(26,5,48,0.92) 0%,rgba(13,2,28,0.97) 100%);
+            border:1px solid rgba(201,168,76,0.3);border-radius:28px;padding:36px 28px 32px;
+            box-shadow:0 0 0 1px rgba(201,168,76,0.06) inset,0 30px 80px rgba(0,0,0,0.8),0 0 60px rgba(124,58,237,0.12);
+            backdrop-filter:blur(24px);position:relative;overflow:hidden; }
+        .card-inner::before { content:'';position:absolute;top:0;left:20%;right:20%;height:2px;
+            background:linear-gradient(90deg,transparent,var(--gold-light),transparent); }
+        .card-glow { position:absolute;border-radius:50%;pointer-events:none; }
+        .logo-wrap { display:flex;justify-content:center;margin-bottom:20px;position:relative; }
+        .logo-ring { width:88px;height:88px;border-radius:50%;padding:3px;
+            background:conic-gradient(var(--gold),var(--purple-accent),var(--gold),var(--purple-accent),var(--gold));
+            animation:ringRotate 4s linear infinite;position:relative; }
+        @keyframes ringRotate { to { transform:rotate(360deg); } }
+        .logo-img { width:100%;height:100%;border-radius:50%;object-fit:cover;background:var(--bg-dark);display:block; }
+        .logo-dot { position:absolute;bottom:2px;right:2px;width:16px;height:16px;
+            background:#22C55E;border-radius:50%;border:2px solid var(--bg-dark); }
+        .title-main { text-align:center;font-size:26px;font-weight:900;
+            background:linear-gradient(135deg,#F0C96B,#C9A84C,#F0C96B);
+            -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+            margin-bottom:4px; }
+        .title-sub { text-align:center;font-size:11px;color:rgba(201,168,76,0.45);font-weight:700;
+            letter-spacing:3px;margin-bottom:28px; }
+        .divider { display:flex;align-items:center;gap:10px;margin-bottom:28px; }
+        .divider-line { flex:1;height:1px; }
+        .dl-r { background:linear-gradient(to right,transparent,rgba(201,168,76,0.3)); }
+        .dl-l { background:linear-gradient(to left,transparent,rgba(201,168,76,0.3)); }
+        .input-label { font-size:11px;font-weight:700;color:rgba(201,168,76,0.55);letter-spacing:1px;margin-bottom:8px;display:block; }
+        .code-input { width:100%;background:rgba(6,1,15,0.7);border:1px solid rgba(201,168,76,0.22);
+            border-radius:14px;padding:14px 18px;color:var(--gold-light);
+            font-family:'Cairo',sans-serif;font-size:18px;font-weight:900;text-align:center;
+            letter-spacing:6px;outline:none;transition:all 0.3s ease; }
+        .code-input:focus { border-color:rgba(201,168,76,0.6);
+            box-shadow:0 0 0 3px rgba(201,168,76,0.08),0 0 20px rgba(201,168,76,0.12); }
+        .code-input::placeholder { color:rgba(201,168,76,0.22);letter-spacing:2px;font-size:13px; }
+        .login-btn { width:100%;padding:15px;border:none;border-radius:14px;cursor:pointer;
+            font-family:'Cairo',sans-serif;font-size:16px;font-weight:900;position:relative;overflow:hidden;
+            background:linear-gradient(90deg,#8B6914,#D4AF37,#F0C96B,#D4AF37,#8B6914);
+            background-size:200% 100%;color:#1A0530;transition:all 0.3s ease;
+            box-shadow:0 4px 24px rgba(201,168,76,0.35),0 1px 0 rgba(255,255,255,0.15) inset;
+            margin-top:16px;animation:btnShimmer 3s linear infinite; }
+        @keyframes btnShimmer { 0%{background-position:100% 0}100%{background-position:-100% 0} }
+        .login-btn:hover { transform:translateY(-2px);box-shadow:0 8px 32px rgba(201,168,76,0.5); }
+        .login-btn::after { content:'';position:absolute;top:0;left:-100%;width:40%;height:100%;
+            background:linear-gradient(90deg,transparent,rgba(255,255,255,0.25),transparent);
+            animation:btnSweep 2.5s ease-in-out infinite; }
+        @keyframes btnSweep { 0%{left:-100%}60%,100%{left:150%} }
+        .error-msg { text-align:center;font-size:13px;font-weight:700;color:#F87171;margin-top:12px;display:none; }
+        #install-overlay { position:fixed;inset:0;background:rgba(6,1,15,0.96);z-index:9999;
+            display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(20px); }
+        .install-card { background:linear-gradient(160deg,rgba(26,5,48,0.95),rgba(13,2,28,0.98));
+            border:1px solid rgba(201,168,76,0.4);border-radius:28px;padding:36px 28px;
+            width:100%;max-width:360px;text-align:center;position:relative;overflow:hidden;
+            box-shadow:0 0 80px rgba(124,58,237,0.2),0 30px 80px rgba(0,0,0,0.8); }
+        .install-card::before { content:'';position:absolute;top:0;left:20%;right:20%;height:2px;
+            background:linear-gradient(90deg,transparent,var(--gold-light),transparent); }
+        .install-btn-primary { width:100%;padding:15px;border:none;border-radius:14px;cursor:pointer;
+            font-family:'Cairo',sans-serif;font-size:16px;font-weight:900;
+            background:linear-gradient(135deg,#059669,#10B981);color:white;margin-bottom:12px;
+            box-shadow:0 4px 20px rgba(16,185,129,0.35);transition:all 0.2s; }
+        .install-btn-primary:hover { transform:translateY(-1px); }
+        .install-btn-skip { color:rgba(255,255,255,0.3);font-size:12px;font-weight:700;
+            background:none;border:none;cursor:pointer;font-family:'Cairo',sans-serif;
+            text-decoration:underline;transition:color 0.2s; }
+        .install-btn-skip:hover { color:rgba(255,255,255,0.6); }
+    </style>
+</head>
+<body>
+<div class="cosmic-bg"></div>
+<canvas class="stars-canvas" id="starsCanvas"></canvas>
+
+<div class="lanterns">
+    <div class="lantern left"><div class="l-wire"></div><div class="l-cap"></div><div class="l-body-inner"></div><div class="l-bottom"></div></div>
+    <div class="lantern right"><div class="l-wire"></div><div class="l-cap"></div><div class="l-body-inner"></div><div class="l-bottom"></div></div>
+</div>
+
+<div class="login-card" id="login-container">
+    <div class="card-inner">
+        <div class="card-glow" style="top:-40px;right:-40px;width:160px;height:160px;background:radial-gradient(circle,rgba(201,168,76,0.12),transparent 70%);"></div>
+        <div class="card-glow" style="bottom:-30px;left:-30px;width:120px;height:120px;background:radial-gradient(circle,rgba(124,58,237,0.15),transparent 70%);"></div>
+        <div class="logo-wrap">
+            <div class="logo-ring"><img src="https://i.postimg.cc/QN7YYDZb/1772330473684.png" class="logo-img" alt="logo"></div>
+            <div class="logo-dot"></div>
+        </div>
+        <h1 class="title-main">ملعب رمضان</h1>
+        <p class="title-sub">✦ التحدي الأكبر ✦</p>
+        <div class="divider">
+            <div class="divider-line dl-r"></div>
+            <span style="color:rgba(201,168,76,0.5);font-size:18px;">❋</span>
+            <div class="divider-line dl-l"></div>
+        </div>
+        <label class="input-label">🔑 كود الدخول</label>
+        <input type="password" id="login-pass" class="code-input" placeholder="• • • • • •" onkeydown="if(event.key==='Enter')loginUser()">
+        <button onclick="loginUser()" id="login-btn" class="login-btn">دخول الملعب ⚽</button>
+        <p id="error-msg" class="error-msg"></p>
+    </div>
+</div>
+
+<div id="install-overlay">
+    <div class="install-card">
+        <div style="position:absolute;top:-40px;right:-40px;width:160px;height:160px;background:radial-gradient(circle,rgba(201,168,76,0.12),transparent);border-radius:50%;"></div>
+        <div style="position:absolute;bottom:-30px;left:-30px;width:120px;height:120px;background:radial-gradient(circle,rgba(124,58,237,0.18),transparent);border-radius:50%;"></div>
+        <div class="logo-wrap" style="margin-bottom:16px;">
+            <div class="logo-ring"><img src="https://i.postimg.cc/QN7YYDZb/1772330473684.png" class="logo-img" alt="logo"></div>
+        </div>
+        <h2 style="font-size:22px;font-weight:900;color:white;margin-bottom:8px;">ثبّت التطبيق! 🚀</h2>
+        <p style="color:rgba(255,255,255,0.45);font-size:13px;font-weight:700;margin-bottom:28px;line-height:1.8;">عشان تدخل الملعب علطول المرة الجاية<br>وتلعب بدون تقطيع</p>
+        <button onclick="triggerInstall()" class="install-btn-primary">تثبيت الآن ✨</button>
+        <button onclick="goToDashboard()" class="install-btn-skip">متابعة بدون تثبيت (مرة واحدة)</button>
+    </div>
+</div>
+
+<script>
+const canvas=document.getElementById('starsCanvas');
+const ctx=canvas.getContext('2d');
+canvas.width=window.innerWidth;canvas.height=window.innerHeight;
+const stars=Array.from({length:130},()=>({
+    x:Math.random()*canvas.width,y:Math.random()*canvas.height,
+    r:Math.random()*1.5+0.3,opacity:Math.random(),
+    speed:Math.random()*0.015+0.005,phase:Math.random()*Math.PI*2,
+    gold:Math.random()>0.85
+}));
+function drawStars(t){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    stars.forEach(s=>{
+        s.opacity=0.15+0.65*Math.abs(Math.sin(t*s.speed+s.phase));
+        ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+        ctx.fillStyle=s.gold?`rgba(201,168,76,${s.opacity})`:`rgba(255,255,255,${s.opacity})`;
+        ctx.fill();
+    });
+    requestAnimationFrame(drawStars);
+}
+requestAnimationFrame(drawStars);
+document.addEventListener('contextmenu',e=>e.preventDefault());
+document.addEventListener('keydown',e=>{if(e.keyCode===123||(e.ctrlKey&&['u','i','j','c','s'].includes(e.key.toLowerCase()))){e.preventDefault();return false;}});
+</script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+<script>
+if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js');}
+const firebaseConfig={apiKey:"AIzaSyBZMnIJ_IOqeAfXqFt-m4tM1Lvo0tUDnk8",projectId:"ramadan-87817",appId:"1:343525703258:web:6776b4857425df8bcca263"};
+if(!firebase.apps.length){firebase.initializeApp(firebaseConfig);}
+const db=firebase.firestore();
+const isApp=window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone;
+let deferredPrompt;let userDataToSave=null;
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;});
+(function checkSavedSession(){try{let saved=localStorage.getItem('currentUser');if(saved){let u=JSON.parse(saved);if(u&&u.id){window.location.replace('dashboard.html');return;}}}catch(e){localStorage.removeItem('currentUser');}})();
+window.onload=function(){let s=localStorage.getItem('savedUserPass');if(s)document.getElementById('login-pass').value=s;document.getElementById('login-pass').focus();};
+function loginUser(){
+    let p=document.getElementById('login-pass').value.trim();
+    let err=document.getElementById('error-msg');let btn=document.getElementById('login-btn');
+    if(!p){err.innerText="⚠️ اكتب الكود الأول!";err.style.display='block';return;}
+    btn.innerText="جاري التحقق...";err.style.display='none';
+    db.collection("users").where("password","==",p).get().then(snap=>{
+        if(snap.empty){err.innerText="❌ الكود خطأ، حاول تاني";err.style.display='block';btn.innerText="دخول الملعب ⚽";}
+        else{
+            let userData=snap.docs[0].data();userData.id=snap.docs[0].id;
+            if(userData.isBanned){err.innerText="⛔ حسابك محظور!";err.style.display='block';btn.innerText="دخول الملعب ⚽";}
+            else{
+                userDataToSave=userData;
+                localStorage.setItem('savedUserPass',p);localStorage.setItem('currentUser',JSON.stringify(userDataToSave));
+                if(isApp){window.location.replace('dashboard.html');}
+                else{document.getElementById('login-container').style.display='none';document.getElementById('install-overlay').style.display='flex';}
+            }
+        }
+    }).catch(()=>{err.innerText="خطأ في الشبكة!";err.style.display='block';btn.innerText="دخول الملعب ⚽";});
+}
+function triggerInstall(){if(deferredPrompt){deferredPrompt.prompt();deferredPrompt.userChoice.then(r=>{if(r.outcome==='accepted')window.location.replace('dashboard.html');});}else window.location.replace('dashboard.html');}
+function goToDashboard(){window.location.replace('dashboard.html');}
+</script>
+</body>
+</html>
