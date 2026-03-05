@@ -14,6 +14,177 @@ let usedFreezeInRound = false;
 let free5050 = 1;
 let freeFreeze = 1;
 // ── نظام مكافحة الغش ─────────────────────────────────────────
+
+// 🔒 حماية الـ Screenshot — الشاشة تبقى سودة لما حد ياخد screenshot
+(function injectScreenshotProtectionCSS() {
+    const style = document.createElement("style");
+    style.id = "screenshot-protection-style";
+    style.textContent = `
+    @media print {
+      body * { visibility: hidden !important; }
+      body::after {
+        content: "🔒 المحتوى محمي";
+        visibility: visible !important;
+        position: fixed; top: 50%; left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 32px; font-weight: 900;
+        color: #C9A84C; font-family: 'Cairo', sans-serif;
+      }
+    }
+  `;
+    document.head.appendChild(style);
+})();
+
+// 🔙 حماية زر الـ Back — رسالة تحذير حلوة وحفظ النقط
+let _backGuardActive = false;
+
+function activateBackGuard() {
+    if (_backGuardActive) return;
+    _backGuardActive = true;
+    history.pushState({ quizGuard: true }, "");
+    window.addEventListener("popstate", _handlePopState);
+}
+
+function deactivateBackGuard() {
+    _backGuardActive = false;
+    window.removeEventListener("popstate", _handlePopState);
+}
+
+function _handlePopState(e) {
+    if (!isQuizActive) return;
+    history.pushState({ quizGuard: true }, "");
+    if (timerInterval) clearInterval(timerInterval);
+    document.querySelectorAll(".opt-btn").forEach((btn) => {
+        btn.style.pointerEvents = "none";
+    });
+    _showBackWarningModal();
+}
+
+function _showBackWarningModal() {
+    document.getElementById("_backWarnModal")?.remove();
+    const modal = document.createElement("div");
+    modal.id = "_backWarnModal";
+    modal.style.cssText = `
+    position:fixed;inset:0;z-index:999999;
+    display:flex;align-items:center;justify-content:center;
+    background:rgba(6,1,15,0.92);backdrop-filter:blur(12px);
+    font-family:'Cairo',sans-serif;direction:rtl;
+    animation:fadeIn .25s ease;
+  `;
+    modal.innerHTML = `
+    <style>
+      @keyframes warnPulse { 0%,100%{transform:scale(1);} 50%{transform:scale(1.08);} }
+      @keyframes fadeIn { from{opacity:0;transform:scale(0.93);} to{opacity:1;transform:scale(1);} }
+      @keyframes shake { 0%,100%{transform:translateX(0);} 20%,60%{transform:translateX(-8px);} 40%,80%{transform:translateX(8px);} }
+    </style>
+    <div style="
+      background:linear-gradient(145deg,rgba(20,8,42,0.98),rgba(10,4,24,0.99));
+      border:2px solid rgba(239,68,68,0.5);
+      border-radius:24px;padding:32px 28px;max-width:340px;width:90%;
+      text-align:center;
+      box-shadow:0 0 60px rgba(239,68,68,0.2),0 20px 60px rgba(0,0,0,0.8);
+      animation:shake .4s ease;
+    ">
+      <div style="
+        width:72px;height:72px;margin:0 auto 18px;
+        background:rgba(239,68,68,0.12);border:2px solid rgba(239,68,68,0.4);
+        border-radius:50%;display:flex;align-items:center;justify-content:center;
+        animation:warnPulse 1.5s infinite;
+      ">
+        <span style="font-size:34px;">⚠️</span>
+      </div>
+      <h2 style="font-size:22px;font-weight:900;color:#f87171;margin-bottom:10px;line-height:1.4;">
+        انتظر يا بطل! 🛑
+      </h2>
+      <p style="font-size:14px;color:rgba(255,255,255,0.65);font-weight:700;margin-bottom:8px;line-height:1.7;">
+        لو خرجت دلوقتي هتفقد باقي الأسئلة<br>
+        بس <span style="color:#fbbf24;">نقطك اللي حلّتها هتتحفظ</span> ✅
+      </p>
+      <p style="font-size:13px;color:rgba(255,255,255,0.35);margin-bottom:24px;">
+        عايز تكمل ولا تخرج؟
+      </p>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <button id="_backWarnContinue" style="
+          width:100%;padding:14px;border-radius:14px;border:none;cursor:pointer;
+          background:linear-gradient(135deg,#059669,#10B981);
+          color:white;font-weight:900;font-size:16px;font-family:'Cairo',sans-serif;
+          box-shadow:0 4px 18px rgba(16,185,129,0.35);transition:transform .15s;
+        " onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1)'">
+          كمّل المعركة ⚔️
+        </button>
+        <button id="_backWarnExit" style="
+          width:100%;padding:13px;border-radius:14px;cursor:pointer;
+          background:rgba(15,6,32,0.7);border:1px solid rgba(239,68,68,0.35);
+          color:rgba(255,255,255,0.55);font-weight:700;font-size:14px;font-family:'Cairo',sans-serif;
+          transition:all .15s;
+        " onmouseover="this.style.borderColor='rgba(239,68,68,0.7)';this.style.color='#f87171'" onmouseout="this.style.borderColor='rgba(239,68,68,0.35)';this.style.color='rgba(255,255,255,0.55)'">
+          خروج وحفظ النقط 🚪
+        </button>
+      </div>
+    </div>
+  `;
+    document.body.appendChild(modal);
+    document.getElementById("_backWarnContinue")?.addEventListener("click", () => {
+        modal.remove();
+        document.querySelectorAll(".opt-btn").forEach((btn) => {
+            btn.style.pointerEvents = "auto";
+        });
+        timerInterval = setInterval(() => {
+            globalTimeLeft--;
+            const timerEl = document.getElementById("timer");
+            if (timerEl) timerEl.innerText = String(globalTimeLeft);
+            if (globalTimeLeft <= 0) window.handleAnswer(-1);
+        }, 1000);
+    });
+    document.getElementById("_backWarnExit")?.addEventListener("click", () => {
+        modal.remove();
+        deactivateBackGuard();
+        isQuizActive = false;
+        _saveScoreAndGoBack();
+    });
+}
+
+function _saveScoreAndGoBack() {
+    const content = document.getElementById("quiz-content");
+    const overlay = document.getElementById("quiz-overlay");
+    if (overlay) overlay.style.display = "flex";
+    if (content) {
+        content.innerHTML = `
+      <div style="text-align:center;padding:30px;">
+        <div style="width:52px;height:52px;border:3px solid rgba(201,168,76,0.3);border-top-color:var(--gold-light);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 16px;"></div>
+        <p style="color:var(--gold-light);font-weight:700;font-size:16px;">جاري حفظ نقطك...</p>
+      </div>`;
+    }
+    if (sessionScore === 0) {
+        deactivateBackGuard();
+        history.back();
+        return;
+    }
+    db.collection("users")
+        .doc(currentUser.id)
+        .update({ score: firebase.firestore.FieldValue.increment(sessionScore) })
+        .then(() => {
+        return db
+            .collection("users")
+            .doc(currentUser.id)
+            .collection("game_logs")
+            .doc(`day_${adminDay}`)
+            .set({
+            day: adminDay,
+            score: sessionScore,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        });
+    })
+        .then(() => {
+        deactivateBackGuard();
+        history.back();
+    })
+        .catch(() => {
+        deactivateBackGuard();
+        history.back();
+    });
+}
+
 document.addEventListener("visibilitychange", () => {
     if (document.hidden && isQuizActive && currentQuestions.length > 0 && currentIndex >= 0) {
         triggerAntiCheat("غادرت شاشة الكويز! اختر هل تكمل أم تخرج.");
@@ -96,6 +267,7 @@ window.startQuizFetch = function (day) {
     freeFreeze = 1;
     used5050InRound = false;
     usedFreezeInRound = false;
+    activateBackGuard(); // 🔙 تفعيل حماية زر الرجوع
     const content = document.getElementById("quiz-content");
     if (content) {
         content.innerHTML = `<p style="text-align:center;font-weight:700;color:var(--gold-light);font-size:18px;animation:pulse 1s infinite;">جاري تجهيز ساحة المعركة...</p>`;
@@ -308,6 +480,7 @@ window.handleAnswer = function (selectedIdx) {
 // ── إنهاء الكويز ──────────────────────────────────────────────
 function endQuiz() {
     isQuizActive = false;
+    deactivateBackGuard(); // 🔙 إلغاء حماية زر الرجوع
     if (timerInterval)
         clearInterval(timerInterval);
     const content = document.getElementById("quiz-content");
